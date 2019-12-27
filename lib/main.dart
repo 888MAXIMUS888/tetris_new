@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:new_tetris/gamer.dart';
 import 'package:new_tetris/tetris.dart';
 
 void main() => runApp(MyApp());
+
+final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -12,7 +15,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Tetris(),
+      navigatorObservers: [routeObserver],
+      home: Tetris()
     );
   }
 }

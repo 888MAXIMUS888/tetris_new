@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:new_tetris/bloc/game_bloc.dart';
 import 'dart:math' as math;
 
 import 'package:new_tetris/game_controller/widgets/button.dart';
 import 'package:new_tetris/game_controller/widgets/description.dart';
 
-class RightController extends StatelessWidget {
 
+
+class RightController extends StatelessWidget {
   final Size directionButtonSize;
   final double _iconSize = 16;
   final Size systemButtonSize = const Size(24, 24);
   final double directionSpace = 16;
+  final ScreenBloc screenBloc;
 
-  RightController({@required this.directionButtonSize});
+  
+
+  RightController({@required this.directionButtonSize, this.screenBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +100,17 @@ class RightController extends StatelessWidget {
                   Button(
                       color: Theme.of(context).buttonColor,
                       size: directionButtonSize,
-                      onTap: () {})
+                      onTap: () {
+                        if(screenBloc.typeGameSelected == TypeGame.tetris){
+                        screenBloc.typeGame.add("snake");
+                        screenBloc.typeGameSelected = TypeGame.snake;
+                        print("_typeGame ${screenBloc.typeGameSelected}");
+                      } else if(screenBloc.typeGameSelected == TypeGame.snake){
+                        screenBloc.typeGame.add("tetris");
+                        screenBloc.typeGameSelected = TypeGame.tetris;
+                        print("_typeGame ${screenBloc.typeGameSelected}");
+                      }
+                      })
                 ],
               ),
               SizedBox(height: directionSpace),
@@ -105,12 +120,24 @@ class RightController extends StatelessWidget {
                   Button(
                       color: Theme.of(context).buttonColor,
                       size: directionButtonSize,
-                      onTap: () {}),
+                      onTap: () {
+                        if(screenBloc.typeGameSelected == TypeGame.tetris){
+                        screenBloc.typeGame.add("snake");
+                        screenBloc.typeGameSelected = TypeGame.snake;
+                        print("_typeGame ${screenBloc.typeGameSelected}");
+                      } else if(screenBloc.typeGameSelected == TypeGame.snake) {
+                        screenBloc.typeGame.add("tetris");
+                         screenBloc.typeGameSelected = TypeGame.tetris;
+                         print("_typeGame ${screenBloc.typeGameSelected}");
+                      }
+                      }),
                   SizedBox(width: directionSpace),
                   Button(
                     color: Theme.of(context).buttonColor,
                     size: directionButtonSize,
-                    onTap: () {},
+                    onTap: () {
+                      
+                    },
                   ),
                 ],
               ),

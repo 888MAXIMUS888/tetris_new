@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/display.dart';
 
 const Color SCREEN_BACKGROUND = Color(0xff9ead86);
 
 class ScreenDecoration extends StatelessWidget {
   // final Widget child;
-  final screenBorderWidth = 3.0;
 
-  const ScreenDecoration({Key key}) : super(key: key);
+  final ScreenBloc screenBloc;
+  final screenBorderWidth = 3.0;
+  final gameState;
+
+  const ScreenDecoration({Key key, @required this.screenBloc, this.gameState}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,7 @@ class ScreenDecoration extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(3),
           color: SCREEN_BACKGROUND,
-          child: Display(width: screenW,),
+          child: Display(width: screenW, screenBloc: screenBloc, gameState: gameState,),
         ),
       ),
     );
