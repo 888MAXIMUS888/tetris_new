@@ -1,5 +1,6 @@
-import 'gamer.dart';
 import 'dart:math' as math;
+
+import 'package:new_tetris/game_snake.dart';
 
 const BLOCK_SHAPES = {
   BlockType.I: [

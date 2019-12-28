@@ -3,35 +3,18 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:new_tetris/audios.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/main.dart';
-// import 'package:tetris/bloc/screen_bloc.dart';
-// import 'package:tetris/gamer/block.dart';
-// import 'package:tetris/main.dart';
-// import 'package:tetris/material/audios.dart';
-// import 'package:tetris/settings/settings.dart';
+import 'package:new_tetris/resourses/snake.dart';
+import 'package:new_tetris/settings/settings.dart';
 
-import 'snake.dart';
 
 ///the height of game pad
 const GAME_PAD_MATRIX_H = 20;
 
 ///the width of game pad
 const GAME_PAD_MATRIX_W = 10;
-
-///state of [GameControl]
-// enum GameStates {
-//   none,
-//   selectedTetris,
-//   selectedSnake,
-//   paused,
-//   runningTetris,
-//   runningSnake,
-//   reset,
-//   mixing,
-//   clear,
-//   drop,
-// }
 
 enum SnakePosition { left, right, down, up }
 
@@ -118,13 +101,6 @@ class GameControl extends State<SnakeGame> with RouteAware {
 
   int _cleared = 0;
 
-  // Block _current;
-
-  // Block _next = Block.getRandom();
-
-  // GameStates _states = GameStates.selectedTetris;
-  // SettingsStates _settinngsStates = SettingsStates.closedSettings;
-
   // Block _getNext() {
   //   final next = _next;
   //   _next = Block.getRandom();
@@ -135,7 +111,6 @@ class GameControl extends State<SnakeGame> with RouteAware {
 
   Snake _next = Snake.getRandom();
 
-  // GameStates _states = GameStates.selectedTetris;
   SnakePosition _snakePosition = SnakePosition.down;
   SettingsStates _settinngsStates = SettingsStates.closedSettings;
 
@@ -145,7 +120,7 @@ class GameControl extends State<SnakeGame> with RouteAware {
     return next;
   }
 
-  // SoundState get _sound => Sound.of(context);
+  SoundState get _sound => Sound.of(context);
 
   void up() {
     // setState(() {
@@ -172,7 +147,8 @@ class GameControl extends State<SnakeGame> with RouteAware {
   }
 
   void drop() async {
-    if (widget.screenBloc.states == GameStates.runningSnake && _current != null) {
+    if (widget.screenBloc.states == GameStates.runningSnake &&
+        _current != null) {
       for (int i = 0; i < GAME_PAD_MATRIX_H; i++) {
         final fall = _current.down(step: i + 1);
         if (!fall.isValidInMatrix(_data)) {
@@ -193,14 +169,16 @@ class GameControl extends State<SnakeGame> with RouteAware {
   }
 
   void downPosition({bool enableSounds = true}) {
-    if (widget.screenBloc.states == GameStates.selectedSnake && _level > _LEVEL_MIN) {
+    if (widget.screenBloc.states == GameStates.selectedSnake &&
+        _level > _LEVEL_MIN) {
       _level--;
-    } else if (widget.screenBloc.states == GameStates.runningSnake && _current != null) {
+    } else if (widget.screenBloc.states == GameStates.runningSnake &&
+        _current != null) {
       final next = _current.down();
       if (next.isValidInMatrix(_data)) {
         _current = next;
         if (enableSounds) {
-          // _sound.move();
+          _sound.move();
         }
       } else {
         //    _autoFall(true);
@@ -211,14 +189,16 @@ class GameControl extends State<SnakeGame> with RouteAware {
   }
 
   void upMovement({bool enableSounds = true}) {
-    if (widget.screenBloc.states == GameStates.selectedSnake && _level > _LEVEL_MIN) {
+    if (widget.screenBloc.states == GameStates.selectedSnake &&
+        _level > _LEVEL_MIN) {
       _level--;
-    } else if (widget.screenBloc.states == GameStates.runningSnake && _current != null) {
+    } else if (widget.screenBloc.states == GameStates.runningSnake &&
+        _current != null) {
       final next = _current.up();
       if (next.isValidInMatrix(_data)) {
         _current = next;
         if (enableSounds) {
-          // _sound.move();
+          _sound.move();
         }
       } else {
         //   _autoFall(true);
@@ -229,14 +209,16 @@ class GameControl extends State<SnakeGame> with RouteAware {
   }
 
   void leftPosition({bool enableSounds = true}) {
-    if (widget.screenBloc.states == GameStates.selectedSnake && _level > _LEVEL_MIN) {
+    if (widget.screenBloc.states == GameStates.selectedSnake &&
+        _level > _LEVEL_MIN) {
       _level--;
-    } else if (widget.screenBloc.states == GameStates.runningSnake && _current != null) {
+    } else if (widget.screenBloc.states == GameStates.runningSnake &&
+        _current != null) {
       final next = _current.left();
       if (next.isValidInMatrix(_data)) {
         _current = next;
         if (enableSounds) {
-          // _sound.move();
+          _sound.move();
         }
       } else {
         _mixCurrentIntoData();
@@ -246,14 +228,16 @@ class GameControl extends State<SnakeGame> with RouteAware {
   }
 
   void rightPosition({bool enableSounds = true}) {
-    if (widget.screenBloc.states == GameStates.selectedSnake && _level > _LEVEL_MIN) {
+    if (widget.screenBloc.states == GameStates.selectedSnake &&
+        _level > _LEVEL_MIN) {
       _level--;
-    } else if (widget.screenBloc.states == GameStates.runningSnake && _current != null) {
+    } else if (widget.screenBloc.states == GameStates.runningSnake &&
+        _current != null) {
       final next = _current.right();
       if (next.isValidInMatrix(_data)) {
         _current = next;
         if (enableSounds) {
-          // _sound.move();
+          _sound.move();
         }
       } else {
         _mixCurrentIntoData();
@@ -332,7 +316,7 @@ class GameControl extends State<SnakeGame> with RouteAware {
     if (widget.screenBloc.states == GameStates.reset) {
       return;
     }
-    // _sound.start();
+    _sound.start();
     widget.screenBloc.states = GameStates.reset;
     () async {
       int line = GAME_PAD_MATRIX_H;
@@ -374,21 +358,21 @@ class GameControl extends State<SnakeGame> with RouteAware {
     setState(() {});
   }
 
-  // settings(ScreenBloc screenBloc) {
-  //   // GameStates gameState = _states;
-  //   debugPrint("_settinngsStates : $_settinngsStates");
+  settings(ScreenBloc screenBloc) {
+    // GameStates gameState = _states;
+    debugPrint("_settinngsStates : $_settinngsStates");
 
-  //   if (_settinngsStates == SettingsStates.openSettings) {
-  //     screenBloc.settingsScreen.add(null);
-  //     _settinngsStates = SettingsStates.closedSettings;
-  //   } else {
-  //     screenBloc.settingsScreen.add(Settings());
-  //     setState(() {
-  //       _settinngsStates = SettingsStates.openSettings;
-  //       pause();
-  //     });
-  //   }
-  // }
+    if (_settinngsStates == SettingsStates.openSettings) {
+      screenBloc.settingsScreen.add(null);
+      _settinngsStates = SettingsStates.closedSettings;
+    } else {
+      screenBloc.settingsScreen.add(Settings());
+      setState(() {
+        _settinngsStates = SettingsStates.openSettings;
+        pause();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -406,20 +390,20 @@ class GameControl extends State<SnakeGame> with RouteAware {
       }
     }
     debugPrint("game states : ${widget.screenBloc.states}");
-    return SnakeGameState(
-        mixed, widget.screenBloc.states, _level, _points, _cleared, _next,
+    return SnakeGameState(mixed, widget.screenBloc.states, _level, _sound.mute,
+        _points, _cleared, _next,
         child: widget.child);
   }
 
   void soundSwitch() {
     setState(() {
-      // _sound.mute = !_sound.mute;
+      _sound.mute = !_sound.mute;
     });
   }
 }
 
 class SnakeGameState extends InheritedWidget {
-  SnakeGameState(this.data, this.states, this.level, this.points,
+  SnakeGameState(this.data, this.states, this.level, this.muted, this.points,
       this.cleared, this.next,
       {Key key, this.child})
       : super(key: key, child: child);
@@ -436,7 +420,7 @@ class SnakeGameState extends InheritedWidget {
 
   final int level;
 
-  // final bool muted;
+  final bool muted;
 
   final int points;
 
@@ -445,70 +429,12 @@ class SnakeGameState extends InheritedWidget {
   final Snake next;
 
   static SnakeGameState of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(SnakeGameState) as SnakeGameState);
+    return (context.inheritFromWidgetOfExactType(SnakeGameState)
+        as SnakeGameState);
   }
 
   @override
   bool updateShouldNotify(SnakeGameState oldWidget) {
     return true;
-  }
-}
-
-
-
-
-///keyboard controller to play game
-class KeyboardController2 extends StatefulWidget {
-  final Widget child;
-
-  KeyboardController2({this.child});
-
-  @override
-  _KeyboardController2State createState() => _KeyboardController2State();
-}
-
-class _KeyboardController2State extends State<KeyboardController2> {
-  @override
-  void initState() {
-    super.initState();
-    RawKeyboard.instance.addListener(_onKey);
-  }
-
-  void _onKey(RawKeyEvent event) {
-    if (event is RawKeyUpEvent) {
-      return;
-    }
-
-    final key = event.data.physicalKey;
-    final game = SnakeGame.of(context);
-
-    if (key == PhysicalKeyboardKey.arrowUp) {
-      game.up();
-    } else if (key == PhysicalKeyboardKey.arrowDown) {
-      game.down();
-    } else if (key == PhysicalKeyboardKey.arrowLeft) {
-      game.left();
-    } else if (key == PhysicalKeyboardKey.arrowRight) {
-      game.right();
-    } else if (key == PhysicalKeyboardKey.space) {
-      game.drop();
-    } else if (key == PhysicalKeyboardKey.keyP) {
-      game.pauseOrResume();
-    } else if (key == PhysicalKeyboardKey.keyS) {
-      game.soundSwitch();
-    } else if (key == PhysicalKeyboardKey.keyR) {
-      game.reset();
-    }
-  }
-
-  @override
-  void dispose() {
-    RawKeyboard.instance.removeListener(_onKey);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
   }
 }

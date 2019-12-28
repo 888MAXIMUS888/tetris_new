@@ -7,6 +7,8 @@ import 'package:new_tetris/game_controller/widgets/description.dart';
 import 'package:new_tetris/game_snake.dart';
 import 'package:new_tetris/gamer.dart';
 
+bool openSettingsScreen = false;
+
 class RightController extends StatelessWidget {
   final Size directionButtonSize;
   final double _iconSize = 16;
@@ -180,7 +182,10 @@ class RightController extends StatelessWidget {
                 size: systemButtonSize,
                 enableLongPress: false,
                 color: Theme.of(context).indicatorColor,
-                onTap: () {}),
+                onTap: () {
+                  openSettingsScreen = !openSettingsScreen;
+                  TetrisGame.of(context).settings(screenBloc);
+                }),
           ),
         )
       ],

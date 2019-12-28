@@ -2,36 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:new_tetris/audios.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/main.dart';
 import 'package:new_tetris/resourses/bloc.dart';
-// import 'package:tetris/bloc/screen_bloc.dart';
-// import 'package:tetris/gamer/block.dart';
-// import 'package:tetris/main.dart';
-// import 'package:tetris/material/audios.dart';
-// import 'package:tetris/settings/settings.dart';
-
-import 'snake.dart';
+import 'package:new_tetris/settings/settings.dart';
 
 ///the height of game pad
 const GAME_PAD_MATRIX_H = 20;
 
 ///the width of game pad
 const GAME_PAD_MATRIX_W = 10;
-
-///state of [GameControl]
-// enum GameStates {
-//   none,
-//   selectedTetris,
-//   selectedSnake,
-//   paused,
-//   runningTetris,
-//   runningSnake,
-//   reset,
-//   mixing,
-//   clear,
-//   drop
-// }
 
 enum SettingsStates { closedSettings, openSettings }
 
@@ -113,13 +94,6 @@ class GameControl extends State<TetrisGame> with RouteAware {
 
   int _cleared = 0;
 
-  // Block _current;
-
-  // Block _next = Block.getRandom();
-
-  // GameStates _states = GameStates.selectedTetris;
-  // SettingsStates _settinngsStates = SettingsStates.closedSettings;
-
   // Block _getNext() {
   //   final next = _next;
   //   _next = Block.getRandom();
@@ -130,7 +104,6 @@ class GameControl extends State<TetrisGame> with RouteAware {
 
   Block _next = Block.getRandom();
 
-  // GameStates _states = GameStates.selectedTetris;
   SettingsStates _settinngsStates = SettingsStates.closedSettings;
 
   Block _getNext() {
@@ -139,7 +112,7 @@ class GameControl extends State<TetrisGame> with RouteAware {
     return next;
   }
 
-  // SoundState get _sound => Sound.of(context);
+  SoundState get _sound => Sound.of(context);
 
   void rotate() {
     if (widget.screenBloc.states == GameStates.selectedTetris &&
@@ -168,7 +141,7 @@ class GameControl extends State<TetrisGame> with RouteAware {
       final next = _current.right();
       if (next.isValidInMatrix(_data)) {
         _current = next;
-        // _sound.move();
+        _sound.move();
       }
     }
     setState(() {});
@@ -186,7 +159,7 @@ class GameControl extends State<TetrisGame> with RouteAware {
       final next = _current.left();
       if (next.isValidInMatrix(_data)) {
         _current = next;
-        // _sound.move();
+        _sound.move();
       }
     }
     setState(() {});
@@ -223,7 +196,7 @@ class GameControl extends State<TetrisGame> with RouteAware {
       if (next.isValidInMatrix(_data)) {
         _current = next;
         if (enableSounds) {
-          // _sound.move();
+          _sound.move();
         }
       } else {
         _mixCurrentIntoData();
@@ -254,7 +227,7 @@ class GameControl extends State<TetrisGame> with RouteAware {
     if (clearLines.isNotEmpty) {
       setState(() => widget.screenBloc.states = GameStates.clear);
 
-      // _sound.clear();
+      _sound.clear();
 
       for (int count = 0; count < 5; count++) {
         clearLines.forEach((line) {
@@ -347,7 +320,7 @@ class GameControl extends State<TetrisGame> with RouteAware {
     if (widget.screenBloc.states == GameStates.reset) {
       return;
     }
-    // _sound.start();
+    _sound.start();
     widget.screenBloc.states = GameStates.reset;
     () async {
       int line = GAME_PAD_MATRIX_H;
@@ -389,21 +362,21 @@ class GameControl extends State<TetrisGame> with RouteAware {
     setState(() {});
   }
 
-  // settings(ScreenBloc screenBloc) {
-  //   // GameStates gameState = _states;
-  //   debugPrint("_settinngsStates : $_settinngsStates");
+  settings(ScreenBloc screenBloc) {
+    // GameStates gameState = _states;
+    debugPrint("_settinngsStates : $_settinngsStates");
 
-  //   if (_settinngsStates == SettingsStates.openSettings) {
-  //     screenBloc.settingsScreen.add(null);
-  //     _settinngsStates = SettingsStates.closedSettings;
-  //   } else {
-  //     screenBloc.settingsScreen.add(Settings());
-  //     setState(() {
-  //       _settinngsStates = SettingsStates.openSettings;
-  //       pause();
-  //     });
-  //   }
-  // }
+    if (_settinngsStates == SettingsStates.openSettings) {
+      screenBloc.settingsScreen.add(null);
+      _settinngsStates = SettingsStates.closedSettings;
+    } else {
+      screenBloc.settingsScreen.add(Settings());
+      setState(() {
+        _settinngsStates = SettingsStates.openSettings;
+        pause();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -422,20 +395,20 @@ class GameControl extends State<TetrisGame> with RouteAware {
     }
     debugPrint("game states : ${widget.screenBloc.states}");
     return TetrisGameState(
-        mixed, widget.screenBloc.states, _level, _points, _cleared, _next,
+        mixed, widget.screenBloc.states, _level, _sound.mute, _points, _cleared, _next,
         child: widget.child);
   }
 
   void soundSwitch() {
     setState(() {
-      // _sound.mute = !_sound.mute;
+      _sound.mute = !_sound.mute;
     });
   }
 }
 
 class TetrisGameState extends InheritedWidget {
   TetrisGameState(
-      this.data, this.states, this.level, this.points, this.cleared, this.next,
+      this.data, this.states, this.level, this.muted, this.points, this.cleared, this.next,
       {Key key, this.child})
       : super(key: key, child: child);
 
@@ -451,7 +424,7 @@ class TetrisGameState extends InheritedWidget {
 
   final int level;
 
-  // final bool muted;
+  final bool muted;
 
   final int points;
 
@@ -467,60 +440,5 @@ class TetrisGameState extends InheritedWidget {
   @override
   bool updateShouldNotify(TetrisGameState oldWidget) {
     return true;
-  }
-}
-
-class KeyboardController extends StatefulWidget {
-  final Widget child;
-
-  KeyboardController({this.child});
-
-  @override
-  _KeyboardController2State createState() => _KeyboardController2State();
-}
-
-class _KeyboardController2State extends State<KeyboardController> {
-  @override
-  void initState() {
-    super.initState();
-    RawKeyboard.instance.addListener(_onKey);
-  }
-
-  void _onKey(RawKeyEvent event) {
-    if (event is RawKeyUpEvent) {
-      return;
-    }
-
-    final key = event.data.physicalKey;
-    final game = TetrisGame.of(context);
-
-    if (key == PhysicalKeyboardKey.arrowUp) {
-      game.rotate();
-    } else if (key == PhysicalKeyboardKey.arrowDown) {
-      game.down();
-    } else if (key == PhysicalKeyboardKey.arrowLeft) {
-      game.left();
-    } else if (key == PhysicalKeyboardKey.arrowRight) {
-      game.right();
-    } else if (key == PhysicalKeyboardKey.space) {
-      game.drop();
-    } else if (key == PhysicalKeyboardKey.keyP) {
-      game.pauseOrResume();
-    } else if (key == PhysicalKeyboardKey.keyS) {
-      game.soundSwitch();
-    } else if (key == PhysicalKeyboardKey.keyR) {
-      game.reset();
-    }
-  }
-
-  @override
-  void dispose() {
-    RawKeyboard.instance.removeListener(_onKey);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
   }
 }

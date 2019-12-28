@@ -4,6 +4,7 @@ import 'package:new_tetris/briks.dart';
 import 'package:new_tetris/gamer.dart';
 import 'package:new_tetris/material.dart';
 import 'package:new_tetris/player_panel.dart';
+import 'package:new_tetris/settings/settings.dart';
 import 'package:new_tetris/status_panel.dart';
 import 'package:vector_math/vector_math_64.dart' as v;
 import 'dart:math';
@@ -30,6 +31,7 @@ class DisplayState extends State<Display> {
     // Shake(
     //   shake: GameState.of(context).states == GameStates.drop,
     //   child:
+    Stack(children: <Widget>[
     Container(
         width: widget.width,
         height: (playerPanelWidth - 6) * 2 + 6,
@@ -47,7 +49,25 @@ class DisplayState extends State<Display> {
               ],
             ),
           ),
-        ));
+        )),
+        StreamBuilder(
+        stream: widget.screenBloc.outSettingsScreen,
+        builder: (context, snapshot) {
+          if (snapshot.data != null) {
+            return Container(
+              width: widget.width,
+              height: (playerPanelWidth - 6) * 2 + 6,
+              child: Settings(),
+            );
+          } else {
+            return Container(
+              width: widget.width,
+              height: (playerPanelWidth - 6) * 2 + 6,
+            );
+          }
+        },
+      )
+        ]);
   }
 }
 
