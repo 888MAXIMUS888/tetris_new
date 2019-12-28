@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:new_tetris/bloc/bloc_provider.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
+import 'package:new_tetris/bloc/settings_bloc.dart';
 import 'dart:math' as math;
 
 import 'package:new_tetris/game_controller/widgets/button.dart';
 import 'package:new_tetris/game_controller/widgets/description.dart';
-import 'package:new_tetris/game_snake.dart';
-import 'package:new_tetris/gamer.dart';
-
-bool openSettingsScreen = false;
+import 'package:new_tetris/games/snake.dart';
+import 'package:new_tetris/games/tetris.dart';
 
 class RightController extends StatelessWidget {
   final Size directionButtonSize;
@@ -20,6 +20,7 @@ class RightController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[
@@ -105,7 +106,10 @@ class RightController extends StatelessWidget {
                       color: Theme.of(context).buttonColor,
                       size: directionButtonSize,
                       onTap: () {
-                        if (screenBloc.typeGameSelected == TypeGame.tetris &&
+                        if (openSettingsScreen == true) {
+                          settingsBloc.changeRightThem();
+                        } else if (screenBloc.typeGameSelected ==
+                                TypeGame.tetris &&
                             screenBloc.states == GameStates.selectedTetris) {
                           screenBloc.typeGame.add("snake");
                           screenBloc.typeGameSelected = TypeGame.snake;
@@ -136,7 +140,10 @@ class RightController extends StatelessWidget {
                       color: Theme.of(context).buttonColor,
                       size: directionButtonSize,
                       onTap: () {
-                        if (screenBloc.typeGameSelected == TypeGame.tetris &&
+                        if (openSettingsScreen == true) {
+                          settingsBloc.changeLeftThem();
+                        } else if (screenBloc.typeGameSelected ==
+                                TypeGame.tetris &&
                             screenBloc.states == GameStates.selectedTetris) {
                           screenBloc.typeGame.add("snake");
                           screenBloc.typeGameSelected = TypeGame.snake;
@@ -181,10 +188,13 @@ class RightController extends StatelessWidget {
             child: Button(
                 size: systemButtonSize,
                 enableLongPress: false,
-                color: Theme.of(context).indicatorColor,
+                color: Theme.of(context).focusColor,
                 onTap: () {
                   openSettingsScreen = !openSettingsScreen;
-                  TetrisGame.of(context).settings(screenBloc);
+                  screenBloc.typeGameSelected == TypeGame.tetris
+                      ? TetrisGame.of(context).settings(screenBloc)
+                      : SnakeGame.of(context).settings(screenBloc);
+                  print("openSettingsScreen  =>> $openSettingsScreen");
                 }),
           ),
         )

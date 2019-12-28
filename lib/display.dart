@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/briks.dart';
-import 'package:new_tetris/gamer.dart';
 import 'package:new_tetris/material.dart';
 import 'package:new_tetris/player_panel.dart';
 import 'package:new_tetris/settings/settings.dart';
@@ -24,6 +23,7 @@ class Display extends StatefulWidget {
 }
 
 class DisplayState extends State<Display> {
+  
   @override
   Widget build(BuildContext context) {
     final playerPanelWidth = widget.width * 0.6;

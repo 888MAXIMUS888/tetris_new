@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:new_tetris/bloc/bloc_provider.dart';
+import 'package:new_tetris/bloc/settings_bloc.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -18,7 +20,8 @@ class SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    // final SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
+    final SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
+    settingsBloc.getIndexTheme();
     return Container(
       color: Colors.grey[300],
       child: Column(
@@ -35,27 +38,26 @@ class SettingsState extends State<Settings> {
               ),
               itemCount: colorsPalette.length,
               itemBuilder: (BuildContext context, int index) {
-                // return StreamBuilder(
-                //   stream: settingsBloc.outThemeIndex,
-                //   builder: (context, snapshot) {
-                //     if (index == snapshot.data) {
+                return StreamBuilder(
+                  stream: settingsBloc.outThemeIndex,
+                  builder: (context, snapshot) {
+                    if (index == snapshot.data) {
                       return Container(
                         decoration: BoxDecoration(
-                            // color: colorsPalette[index],
-                            color: Colors.red,
+                            color: colorsPalette[index],
                             border: Border.all(color: Colors.black, width: 3)),
                         width: 10,
                         height: 10,
                       );
-                    // } else {
-                    //   return Container(
-                    //     width: 10,
-                    //     height: 10,
-                    //     color: colorsPalette[index],
-                    //   );
-                    // }
-                //   },
-                // );
+                    } else {
+                      return Container(
+                        width: 10,
+                        height: 10,
+                        color: colorsPalette[index],
+                      );
+                    }
+                  },
+                );
               },
             ),
           ))

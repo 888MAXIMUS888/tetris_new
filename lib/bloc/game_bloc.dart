@@ -1,4 +1,3 @@
-import 'package:new_tetris/gamer.dart';
 import 'package:rxdart/rxdart.dart';
 
 enum TypeGame {tetris, snake}

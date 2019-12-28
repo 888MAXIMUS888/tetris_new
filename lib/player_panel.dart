@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/briks.dart';
-import 'package:new_tetris/game_snake.dart';
-import 'package:new_tetris/gamer.dart';
+import 'package:new_tetris/games/snake.dart';
+import 'package:new_tetris/games/tetris.dart';
 
 enum TypeGame { tetris, snake }
 
@@ -69,46 +69,32 @@ class _PlayerPad extends StatelessWidget {
             }).toList(),
           );
         } else {
-          return     
-          Column(
-      children: SnakeGameState.of(context).data.map((list) {
-        return Row(
-          children: list.map((b) {
-            return b == 1
-                ? const Brik.normal()
-                : b == 2 ? const Brik.highlight() : const Brik.empty();
-          }).toList(),
-        );
-      }).toList(),
-    );
+          return Column(
+            children: SnakeGameState.of(context).data.map((list) {
+              return Row(
+                children: list.map((b) {
+                  return b == 1
+                      ? const Brik.normal()
+                      : b == 2 ? const Brik.highlight() : const Brik.empty();
+                }).toList(),
+              );
+            }).toList(),
+          );
         }
       },
     );
-    // Column(
-    //   children: GameState.of(context).data.map((list) {
-    //     return Row(
-    //       children: list.map((b) {
-    //         return b == 1
-    //             ? const Brik.normal()
-    //             : b == 2 ? const Brik.highlight() : const Brik.empty();
-    //       }).toList(),
-    //     );
-    //   }).toList(),
-    // );
   }
 }
 
 class _GameUninitialized extends StatelessWidget {
   final ScreenBloc screenBloc;
-  TypeGame _typeGame = TypeGame.tetris;
 
   _GameUninitialized({@required this.screenBloc});
 
   @override
   Widget build(BuildContext context) {
-    // if (_typeGame == TypeGame.tetris) {
-
-    return StreamBuilder(
+    if(screenBloc.states == GameStates.selectedTetris || screenBloc.states == GameStates.selectedSnake){
+      return StreamBuilder(
       stream: screenBloc.outTypeGame,
       builder: (context, snapshot) {
         return Center(
@@ -125,22 +111,9 @@ class _GameUninitialized extends StatelessWidget {
         );
       },
     );
-
-    // } else if (_typeGame == TypeGame.snake) {
-    //   return Center(
-    //     child: Column(
-    //       mainAxisSize: MainAxisSize.min,
-    //       children: <Widget>[
-    //         SizedBox(height: 16),
-    //         Text(
-    //           "snake",
-    //           style: TextStyle(fontSize: 20),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // } else {
-    //   return Container();
-    // }
+    } else {
+      return Container();
+    }
+    
   }
 }

@@ -31,7 +31,7 @@ class SystemButtonGroup extends StatelessWidget {
           child: Button(
               size: systemButtonSize,
               enableLongPress: false,
-              color: Theme.of(context).indicatorColor,
+              color: Theme.of(context).focusColor,
               onTap: () {}),
         )
       ],
