@@ -4,7 +4,6 @@ import 'package:new_tetris/game_controller/widgets/button.dart';
 import 'package:new_tetris/game_controller/widgets/description.dart';
 import 'package:new_tetris/game_snake.dart';
 import 'package:new_tetris/gamer.dart';
-// import 'package:new_tetris/gamer.dart';
 
 class DropButton extends StatelessWidget {
   final ScreenBloc screenBloc;
@@ -13,6 +12,7 @@ class DropButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("screenBloc.typeGameSelected => ${screenBloc.typeGameSelected}");
     return Description(
         text: 'drop',
         child: Button(

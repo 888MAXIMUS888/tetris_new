@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:new_tetris/bloc/game_bloc.dart';
+import 'package:new_tetris/main.dart';
 // import 'package:tetris/bloc/screen_bloc.dart';
 // import 'package:tetris/gamer/block.dart';
 // import 'package:tetris/main.dart';
@@ -18,18 +20,18 @@ const GAME_PAD_MATRIX_H = 20;
 const GAME_PAD_MATRIX_W = 10;
 
 ///state of [GameControl]
-enum GameStates {
-  none,
-  selectedTetris,
-  selectedSnake,
-  paused,
-  runningTetris,
-  runningSnake,
-  reset,
-  mixing,
-  clear,
-  drop,
-}
+// enum GameStates {
+//   none,
+//   selectedTetris,
+//   selectedSnake,
+//   paused,
+//   runningTetris,
+//   runningSnake,
+//   reset,
+//   mixing,
+//   clear,
+//   drop,
+// }
 
 enum SnakePosition { left, right, down, up }
 
@@ -37,8 +39,9 @@ enum SettingsStates { closedSettings, openSettings }
 
 class SnakeGame extends StatefulWidget {
   final Widget child;
+  final ScreenBloc screenBloc;
 
-  const SnakeGame({Key key, @required this.child})
+  const SnakeGame({Key key, @required this.child, this.screenBloc})
       : assert(child != null),
         super(key: key);
 
@@ -85,12 +88,12 @@ class GameControl extends State<SnakeGame> with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // routeObserver.subscribe(this, ModalRoute.of(context));
+    routeObserver.subscribe(this, ModalRoute.of(context));
   }
 
   @override
   void dispose() {
-    // routeObserver.unsubscribe(this);
+    routeObserver.unsubscribe(this);
     super.dispose();
   }
 
@@ -132,7 +135,7 @@ class GameControl extends State<SnakeGame> with RouteAware {
 
   Snake _next = Snake.getRandom();
 
-  GameStates _states = GameStates.selectedTetris;
+  // GameStates _states = GameStates.selectedTetris;
   SnakePosition _snakePosition = SnakePosition.down;
   SettingsStates _settinngsStates = SettingsStates.closedSettings;
 
@@ -169,12 +172,12 @@ class GameControl extends State<SnakeGame> with RouteAware {
   }
 
   void drop() async {
-    if (_states == GameStates.runningTetris && _current != null) {
+    if (widget.screenBloc.states == GameStates.runningSnake && _current != null) {
       for (int i = 0; i < GAME_PAD_MATRIX_H; i++) {
         final fall = _current.down(step: i + 1);
         if (!fall.isValidInMatrix(_data)) {
           _current = _current.down(step: i);
-          _states = GameStates.drop;
+          widget.screenBloc.states = GameStates.drop;
           setState(() {});
           await Future.delayed(const Duration(milliseconds: 100));
           // _autoFall(true);
@@ -183,16 +186,16 @@ class GameControl extends State<SnakeGame> with RouteAware {
         }
       }
       setState(() {});
-    } else if (_states == GameStates.paused ||
-        _states == GameStates.selectedTetris) {
+    } else if (widget.screenBloc.states == GameStates.paused ||
+        widget.screenBloc.states == GameStates.selectedSnake) {
       _startGame();
     }
   }
 
   void downPosition({bool enableSounds = true}) {
-    if (_states == GameStates.selectedTetris && _level > _LEVEL_MIN) {
+    if (widget.screenBloc.states == GameStates.selectedSnake && _level > _LEVEL_MIN) {
       _level--;
-    } else if (_states == GameStates.runningTetris && _current != null) {
+    } else if (widget.screenBloc.states == GameStates.runningSnake && _current != null) {
       final next = _current.down();
       if (next.isValidInMatrix(_data)) {
         _current = next;
@@ -208,9 +211,9 @@ class GameControl extends State<SnakeGame> with RouteAware {
   }
 
   void upMovement({bool enableSounds = true}) {
-    if (_states == GameStates.selectedTetris && _level > _LEVEL_MIN) {
+    if (widget.screenBloc.states == GameStates.selectedSnake && _level > _LEVEL_MIN) {
       _level--;
-    } else if (_states == GameStates.runningTetris && _current != null) {
+    } else if (widget.screenBloc.states == GameStates.runningSnake && _current != null) {
       final next = _current.up();
       if (next.isValidInMatrix(_data)) {
         _current = next;
@@ -226,9 +229,9 @@ class GameControl extends State<SnakeGame> with RouteAware {
   }
 
   void leftPosition({bool enableSounds = true}) {
-    if (_states == GameStates.selectedTetris && _level > _LEVEL_MIN) {
+    if (widget.screenBloc.states == GameStates.selectedSnake && _level > _LEVEL_MIN) {
       _level--;
-    } else if (_states == GameStates.runningTetris && _current != null) {
+    } else if (widget.screenBloc.states == GameStates.runningSnake && _current != null) {
       final next = _current.left();
       if (next.isValidInMatrix(_data)) {
         _current = next;
@@ -243,9 +246,9 @@ class GameControl extends State<SnakeGame> with RouteAware {
   }
 
   void rightPosition({bool enableSounds = true}) {
-    if (_states == GameStates.selectedTetris && _level > _LEVEL_MIN) {
+    if (widget.screenBloc.states == GameStates.selectedSnake && _level > _LEVEL_MIN) {
       _level--;
-    } else if (_states == GameStates.runningTetris && _current != null) {
+    } else if (widget.screenBloc.states == GameStates.runningSnake && _current != null) {
       final next = _current.right();
       if (next.isValidInMatrix(_data)) {
         _current = next;
@@ -306,31 +309,31 @@ class GameControl extends State<SnakeGame> with RouteAware {
   }
 
   void pause() {
-    if (_states == GameStates.runningTetris) {
-      _states = GameStates.paused;
+    if (widget.screenBloc.states == GameStates.runningSnake) {
+      widget.screenBloc.states = GameStates.paused;
     }
   }
 
   void pauseOrResume() {
-    if (_states == GameStates.runningTetris) {
+    if (widget.screenBloc.states == GameStates.runningSnake) {
       pause();
-    } else if (_states == GameStates.paused ||
-        _states == GameStates.selectedTetris) {
+    } else if (widget.screenBloc.states == GameStates.paused ||
+        widget.screenBloc.states == GameStates.selectedSnake) {
       _startGame();
     }
   }
 
   void reset() {
-    if (_states == GameStates.selectedTetris) {
+    if (widget.screenBloc.states == GameStates.selectedSnake) {
       //可以开始游戏
       _startGame();
       return;
     }
-    if (_states == GameStates.reset) {
+    if (widget.screenBloc.states == GameStates.reset) {
       return;
     }
     // _sound.start();
-    _states = GameStates.reset;
+    widget.screenBloc.states = GameStates.reset;
     () async {
       int line = GAME_PAD_MATRIX_H;
       await Future.doWhile(() async {
@@ -356,17 +359,17 @@ class GameControl extends State<SnakeGame> with RouteAware {
         return line != GAME_PAD_MATRIX_H;
       });
       setState(() {
-        _states = GameStates.selectedTetris;
+        widget.screenBloc.states = GameStates.selectedSnake;
       });
     }();
   }
 
   void _startGame() {
-    if (_states == GameStates.runningTetris &&
+    if (widget.screenBloc.states == GameStates.runningSnake &&
         _autoFallTimer?.isActive == false) {
       return;
     }
-    _states = GameStates.runningTetris;
+    widget.screenBloc.states = GameStates.runningSnake;
     _autoFall(true);
     setState(() {});
   }
@@ -402,9 +405,9 @@ class GameControl extends State<SnakeGame> with RouteAware {
         mixed[i][j] = value;
       }
     }
-    debugPrint("game states : $_states");
+    debugPrint("game states : ${widget.screenBloc.states}");
     return SnakeGameState(
-        mixed, _states, _level, _points, _cleared, _next,
+        mixed, widget.screenBloc.states, _level, _points, _cleared, _next,
         child: widget.child);
   }
 

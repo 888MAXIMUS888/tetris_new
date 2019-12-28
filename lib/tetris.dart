@@ -25,7 +25,7 @@ class TetrisState extends State<Tetris> {
       builder: (context, snapshot) {
         if (snapshot.data == "tetris") {
           return TetrisGame(
-            // screenBloc: screenBloc,
+              screenBloc: screenBloc,
               child: KeyboardController(
                   // screenBloc: screenBloc,
                   child: Container(
@@ -44,6 +44,7 @@ class TetrisState extends State<Tetris> {
         } else {
           print("snake");
           return SnakeGame(
+              screenBloc: screenBloc,
               child: KeyboardController2(
                   child: Container(
                       padding: MediaQuery.of(context).padding,

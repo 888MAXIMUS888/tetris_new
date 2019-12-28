@@ -4,8 +4,8 @@ import 'dart:math' as math;
 
 import 'package:new_tetris/game_controller/widgets/button.dart';
 import 'package:new_tetris/game_controller/widgets/description.dart';
-
-
+import 'package:new_tetris/game_snake.dart';
+import 'package:new_tetris/gamer.dart';
 
 class RightController extends StatelessWidget {
   final Size directionButtonSize;
@@ -13,8 +13,6 @@ class RightController extends StatelessWidget {
   final Size systemButtonSize = const Size(24, 24);
   final double directionSpace = 16;
   final ScreenBloc screenBloc;
-
-  
 
   RightController({@required this.directionButtonSize, this.screenBloc});
 
@@ -95,21 +93,36 @@ class RightController extends StatelessWidget {
                       color: Theme.of(context).buttonColor,
                       enableLongPress: false,
                       size: directionButtonSize,
-                      onTap: () {}),
+                      onTap: () {
+                        screenBloc.typeGameSelected == TypeGame.tetris
+                            ? TetrisGame.of(context).rotate()
+                            : SnakeGame.of(context).up();
+                      }),
                   SizedBox(width: directionSpace),
                   Button(
                       color: Theme.of(context).buttonColor,
                       size: directionButtonSize,
                       onTap: () {
-                        if(screenBloc.typeGameSelected == TypeGame.tetris){
-                        screenBloc.typeGame.add("snake");
-                        screenBloc.typeGameSelected = TypeGame.snake;
-                        print("_typeGame ${screenBloc.typeGameSelected}");
-                      } else if(screenBloc.typeGameSelected == TypeGame.snake){
-                        screenBloc.typeGame.add("tetris");
-                        screenBloc.typeGameSelected = TypeGame.tetris;
-                        print("_typeGame ${screenBloc.typeGameSelected}");
-                      }
+                        if (screenBloc.typeGameSelected == TypeGame.tetris &&
+                            screenBloc.states == GameStates.selectedTetris) {
+                          screenBloc.typeGame.add("snake");
+                          screenBloc.typeGameSelected = TypeGame.snake;
+                          screenBloc.states = GameStates.selectedSnake;
+                          print("_typeGame ${screenBloc.typeGameSelected}");
+                        } else if (screenBloc.typeGameSelected ==
+                                TypeGame.snake &&
+                            screenBloc.states == GameStates.selectedSnake) {
+                          screenBloc.typeGame.add("tetris");
+                          screenBloc.typeGameSelected = TypeGame.tetris;
+                          screenBloc.states = GameStates.selectedTetris;
+                          print("_typeGame ${screenBloc.typeGameSelected}");
+                        } else if (screenBloc.typeGameSelected ==
+                            TypeGame.tetris) {
+                          TetrisGame.of(context).right();
+                        } else if (screenBloc.typeGameSelected ==
+                            TypeGame.snake) {
+                          SnakeGame.of(context).right();
+                        }
                       })
                 ],
               ),
@@ -121,22 +134,35 @@ class RightController extends StatelessWidget {
                       color: Theme.of(context).buttonColor,
                       size: directionButtonSize,
                       onTap: () {
-                        if(screenBloc.typeGameSelected == TypeGame.tetris){
-                        screenBloc.typeGame.add("snake");
-                        screenBloc.typeGameSelected = TypeGame.snake;
-                        print("_typeGame ${screenBloc.typeGameSelected}");
-                      } else if(screenBloc.typeGameSelected == TypeGame.snake) {
-                        screenBloc.typeGame.add("tetris");
-                         screenBloc.typeGameSelected = TypeGame.tetris;
-                         print("_typeGame ${screenBloc.typeGameSelected}");
-                      }
+                        if (screenBloc.typeGameSelected == TypeGame.tetris &&
+                            screenBloc.states == GameStates.selectedTetris) {
+                          screenBloc.typeGame.add("snake");
+                          screenBloc.typeGameSelected = TypeGame.snake;
+                          screenBloc.states = GameStates.selectedSnake;
+                          print("_typeGame ${screenBloc.typeGameSelected}");
+                        } else if (screenBloc.typeGameSelected ==
+                                TypeGame.snake &&
+                            screenBloc.states == GameStates.selectedSnake) {
+                          screenBloc.typeGame.add("tetris");
+                          screenBloc.typeGameSelected = TypeGame.tetris;
+                          screenBloc.states = GameStates.selectedTetris;
+                          print("_typeGame ${screenBloc.typeGameSelected}");
+                        } else if (screenBloc.typeGameSelected ==
+                            TypeGame.tetris) {
+                          TetrisGame.of(context).left();
+                        } else if (screenBloc.typeGameSelected ==
+                            TypeGame.snake) {
+                          SnakeGame.of(context).left();
+                        }
                       }),
                   SizedBox(width: directionSpace),
                   Button(
                     color: Theme.of(context).buttonColor,
                     size: directionButtonSize,
                     onTap: () {
-                      
+                      screenBloc.typeGameSelected == TypeGame.tetris
+                          ? TetrisGame.of(context).down()
+                          : SnakeGame.of(context).down();
                     },
                   ),
                 ],
