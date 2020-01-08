@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/game_controller/widgets/button.dart';
 import 'package:new_tetris/game_controller/widgets/description.dart';
+import 'package:new_tetris/games/snake.dart';
+import 'package:new_tetris/games/tetris.dart';
 
 class SystemButtonGroup extends StatelessWidget {
   final Size systemButtonSize = const Size(24, 24);
+  final ScreenBloc screenBloc;
+
+  SystemButtonGroup({@required this.screenBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +22,11 @@ class SystemButtonGroup extends StatelessWidget {
               size: systemButtonSize,
               color: Theme.of(context).indicatorColor,
               enableLongPress: false,
-              onTap: () {}),
+              onTap: () {
+                screenBloc.typeGameSelected == TypeGame.tetris
+                    ? TetrisGame.of(context).soundSwitch()
+                    : SnakeGame.of(context).soundSwitch();
+              }),
         ),
         Description(
           text: "pause/resume",
@@ -24,7 +34,11 @@ class SystemButtonGroup extends StatelessWidget {
               size: systemButtonSize,
               color: Theme.of(context).indicatorColor,
               enableLongPress: false,
-              onTap: () {}),
+              onTap: () {
+                screenBloc.typeGameSelected == TypeGame.tetris
+                    ? TetrisGame.of(context).pauseOrResume()
+                    : SnakeGame.of(context).pauseOrResume();
+              }),
         ),
         Description(
           text: "reset",
@@ -32,7 +46,11 @@ class SystemButtonGroup extends StatelessWidget {
               size: systemButtonSize,
               enableLongPress: false,
               color: Theme.of(context).focusColor,
-              onTap: () {}),
+              onTap: () {
+                screenBloc.typeGameSelected == TypeGame.tetris
+                    ? TetrisGame.of(context).reset()
+                    : SnakeGame.of(context).reset();
+              }),
         )
       ],
     );

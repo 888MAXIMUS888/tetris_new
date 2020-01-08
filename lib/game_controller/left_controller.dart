@@ -13,7 +13,7 @@ class LeftController extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        SystemButtonGroup(),
+        SystemButtonGroup(screenBloc: screenBloc),
         Expanded(
           child: Center(
             child: DropButton(screenBloc: screenBloc),
