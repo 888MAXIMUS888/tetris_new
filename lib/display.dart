@@ -9,7 +9,6 @@ import 'package:vector_math/vector_math_64.dart' as v;
 import 'dart:math';
 
 class Display extends StatefulWidget {
-
   final ScreenBloc screenBloc;
   final double width;
   final gameState;
@@ -23,34 +22,36 @@ class Display extends StatefulWidget {
 }
 
 class DisplayState extends State<Display> {
-  
   @override
   Widget build(BuildContext context) {
     final playerPanelWidth = widget.width * 0.6;
-    return 
-    // Shake(
-    //   shake: GameState.of(context).states == GameStates.drop,
-    //   child:
-    Stack(children: <Widget>[
-    Container(
-        width: widget.width,
-        height: (playerPanelWidth - 6) * 2 + 6,
-        child: GameMaterial(
-          child: BrikSize(
-            size: getBrikSizeForScreenWidth(playerPanelWidth),
-            child: Row(
-              children: <Widget>[
-                PlayerPanel(width: playerPanelWidth, screenBloc: widget.screenBloc, gameState: widget.gameState,)
-                ,
-                SizedBox(
-                  width: widget.width - playerPanelWidth,
-                  child: StatusPanel(),
-                )
-              ],
+    return
+        // Shake(
+        //   shake: GameState.of(context).states == GameStates.drop,
+        //   child:
+        Stack(children: <Widget>[
+      Container(
+          width: widget.width,
+          height: (playerPanelWidth - 6) * 2 + 6,
+          child: GameMaterial(
+            child: BrikSize(
+              size: getBrikSizeForScreenWidth(playerPanelWidth),
+              child: Row(
+                children: <Widget>[
+                  PlayerPanel(
+                    width: playerPanelWidth,
+                    screenBloc: widget.screenBloc,
+                    gameState: widget.gameState,
+                  ),
+                  SizedBox(
+                    width: widget.width - playerPanelWidth,
+                    child: StatusPanel(screenBloc: widget.screenBloc,),
+                  )
+                ],
+              ),
             ),
-          ),
-        )),
-        StreamBuilder(
+          )),
+      StreamBuilder(
         stream: widget.screenBloc.outSettingsScreen,
         builder: (context, snapshot) {
           if (snapshot.data != null) {
@@ -67,7 +68,7 @@ class DisplayState extends State<Display> {
           }
         },
       )
-        ]);
+    ]);
   }
 }
 
@@ -126,4 +127,3 @@ class DisplayState extends State<Display> {
 //     );
 //   }
 // }
-
