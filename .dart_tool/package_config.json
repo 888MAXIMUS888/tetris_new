@@ -62,6 +62,12 @@
       "languageVersion": "2.0"
     },
     {
+      "name": "firebase_admob",
+      "rootUri": "file:///Users/maksimzaika/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.9.0+10",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///Users/maksimzaika/flutter/packages/flutter",
       "packageUri": "lib/",
@@ -70,6 +76,12 @@
     {
       "name": "flutter_bloc",
       "rootUri": "file:///Users/maksimzaika/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_bloc-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "flutter_device_type",
+      "rootUri": "file:///Users/maksimzaika/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_device_type-0.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.0"
     },
@@ -120,6 +132,12 @@
       "rootUri": "file:///Users/maksimzaika/flutter/.pub-cache/hosted/pub.dartlang.org/petitparser-2.4.0",
       "packageUri": "lib/",
       "languageVersion": "2.4"
+    },
+    {
+      "name": "platform",
+      "rootUri": "file:///Users/maksimzaika/flutter/.pub-cache/hosted/pub.dartlang.org/platform-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "1.24"
     },
     {
       "name": "provider",
@@ -236,7 +254,7 @@
       "languageVersion": "2.1"
     }
   ],
-  "generated": "2020-01-08T10:45:32.015206Z",
+  "generated": "2020-01-11T12:16:30.139736Z",
   "generator": "pub",
   "generatorVersion": "2.8.0-dev.0.0.flutter-886615d0f9"
 }
