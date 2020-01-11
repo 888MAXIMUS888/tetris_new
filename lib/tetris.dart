@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_tetris/audios.dart';
+import 'package:new_tetris/bloc/ads_bloc.dart';
 import 'package:new_tetris/bloc/bloc_provider.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/bloc/settings_bloc.dart';
@@ -20,10 +21,12 @@ class TetrisState extends State<Tetris> {
   SettingsBloc settingsBloc = SettingsBloc();
 
   ScreenBloc screenBloc = ScreenBloc();
+  AdsBloc adsBloc = AdsBloc();
 
   @override
   void initState() {
     settingsBloc.initialThem(context);
+    adsBloc.adsBanner();
     super.initState();
   }
 
@@ -50,6 +53,7 @@ class TetrisState extends State<Tetris> {
                         child: Container(
                             padding: MediaQuery.of(context).padding,
                             child: Column(children: <Widget>[
+                              SizedBox(height: 52),
                               Spacer(),
                               ScreenDecoration(
                                 screenBloc: screenBloc,
@@ -70,6 +74,7 @@ class TetrisState extends State<Tetris> {
                         child: Container(
                             padding: MediaQuery.of(context).padding,
                             child: Column(children: <Widget>[
+                              SizedBox(height: 52),
                               Spacer(),
                               ScreenDecoration(
                                 screenBloc: screenBloc,

@@ -27,6 +27,8 @@ dependencies:
   soundpool: ^0.5.3
   shared_preferences: ^0.5.6
   flutter_bloc: ^2.1.1
+  firebase_admob: ^0.9.0+10
+  flutter_device_type: ^0.2.0
 
 dev_dependencies:
   flutter_test:
