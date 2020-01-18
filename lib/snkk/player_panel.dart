@@ -65,9 +65,9 @@ class PlayerPanelState extends State<PlayerPanel> {
 
   @override
   void initState() {
-    // startingSnake();
+    startingSnake();
     // if (widget.screenBloc.gameState == GameState.START) {
-    // timer = new Timer.periodic(new Duration(milliseconds: 1000), onTimeTick);
+    timer = new Timer.periodic(new Duration(milliseconds: 1000), onTimeTick);
     // }
     super.initState();
   }
@@ -83,40 +83,40 @@ class PlayerPanelState extends State<PlayerPanel> {
               border: Border.all(color: Colors.black),
             ),
             child: Stack(children: <Widget>[
-              CustomPaint(
-                painter: PaintImage2(),
-              ),
-              CustomPaint(
-                painter: PaintImage3(),
-              ),
-              CustomPaint(
-                painter: PaintImage(snakePosition: snakePosition),
-              ),
-              // GridView.builder(
-              //   physics: NeverScrollableScrollPhysics(),
-              //   padding: EdgeInsets.all(0),
-              //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //       crossAxisCount: GAME_PAD_MATRIX_W, childAspectRatio: 1),
-              //   itemCount: GAME_PAD_MATRIX_H * GAME_PAD_MATRIX_W,
-              //   itemBuilder: (context, index) {
-              //     List<int> xy = [];
-              //     int x, y = 0;
-              //     x = (index / GAME_PAD_MATRIX_W).floor();
-              //     y = (index % GAME_PAD_MATRIX_H);
-              //     xy.add(x);
-              //     xy.add(y);
-              //     // print("x ===> $x");
-              //     // print("y ===> $y");
-              //     return GestureDetector(
-              //       child: rowSelected(x, y, width, xy, index),
-              //       onTap: () {
-              //         print("index ======> $index");
-              //         print("x ======> $x");
-              //         print("y ======> $y");
-              //       },
-              //     );
-              //   },
-              // )
+              // CustomPaint(
+              //   painter: PaintImage2(),
+              // ),
+              // CustomPaint(
+              //   painter: PaintImage3(),
+              // ),
+              // CustomPaint(
+              //   painter: PaintImage(snakePosition: snakePosition),
+              // ),
+              GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.all(0),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: GAME_PAD_MATRIX_W, childAspectRatio: 1),
+                itemCount: GAME_PAD_MATRIX_H * GAME_PAD_MATRIX_W,
+                itemBuilder: (context, index) {
+                  List<int> xy = [];
+                  int x, y = 0;
+                  x = (index / GAME_PAD_MATRIX_W).floor();
+                  y = (index % GAME_PAD_MATRIX_H);
+                  xy.add(x);
+                  xy.add(y);
+                  // print("x ===> $x");
+                  // print("y ===> $y");
+                  return GestureDetector(
+                    child: rowSelected(x, y, width, xy, index),
+                    onTap: () {
+                      print("index ======> $index");
+                      print("x ======> $x");
+                      print("y ======> $y");
+                    },
+                  );
+                },
+              )
             ])));
   }
 
@@ -184,14 +184,14 @@ class PlayerPanelState extends State<PlayerPanel> {
 
           case Direction.RIGHT:
             var currentHeadPos = snakePosition;
-            // snakePosition.insert(0, currentHeadPos[0] + 1);
-            // snakePosition.removeLast();
-            setState(() {
-              currentHeadPos.add(currentHeadPos[0] + 1);
-              currentHeadPos.lastIndexOf(0);
+            snakePosition.insert(0, currentHeadPos[0] + 1);
+            snakePosition.removeLast();
+            // setState(() {
+            //   currentHeadPos.add(currentHeadPos[0] + 1);
+            //   currentHeadPos.lastIndexOf(0);
               // currentHeadPos.sort();
-              snakePosition = currentHeadPos;
-            });
+              // snakePosition = currentHeadPos;
+            // });
 
             // setState(() {
             //   snakePosition = currentHeadPos;
