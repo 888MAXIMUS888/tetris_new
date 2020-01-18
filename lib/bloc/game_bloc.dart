@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:rxdart/rxdart.dart';
 
 enum TypeGame {tetris, snake}
@@ -64,7 +66,7 @@ class ScreenBloc {
   }
 
   void left() {
-    snakeGameStates.add(Direction.UP);
+    snakeGameStates.add(Direction.LEFT);
   }
 
   void down() {

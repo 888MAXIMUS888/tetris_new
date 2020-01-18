@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
+import 'package:new_tetris/snkk/paint.dart';
+import 'package:new_tetris/snkk/paint2.dart';
+import 'package:new_tetris/snkk/paint3.dart';
 
 const _COLOR_NORMAL = Colors.black87;
 
@@ -58,13 +61,13 @@ class PlayerPanelState extends State<PlayerPanel> {
   List<int> snake = [1, 1];
   // int indexes = 20;
   Timer timer;
-  List<int> snakePosition = [];
+  List<int> snakePosition = [33, 23, 13, 3];
 
   @override
   void initState() {
-    startingSnake();
+    // startingSnake();
     // if (widget.screenBloc.gameState == GameState.START) {
-    timer = new Timer.periodic(new Duration(milliseconds: 800), onTimeTick);
+    // timer = new Timer.periodic(new Duration(milliseconds: 1000), onTimeTick);
     // }
     super.initState();
   }
@@ -80,38 +83,47 @@ class PlayerPanelState extends State<PlayerPanel> {
               border: Border.all(color: Colors.black),
             ),
             child: Stack(children: <Widget>[
-              GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.all(0),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: GAME_PAD_MATRIX_W, childAspectRatio: 1),
-                itemCount: GAME_PAD_MATRIX_H * GAME_PAD_MATRIX_W,
-                itemBuilder: (context, index) {
-                  List<int> xy = [];
-                  int x, y = 0;
-                  x = (index / GAME_PAD_MATRIX_W).floor();
-                  y = (index % GAME_PAD_MATRIX_H);
-                  xy.add(x);
-                  xy.add(y);
-                  print("x ===> $x");
-                  print("y ===> $y");
-                  return GestureDetector(
-                    child: rowSelected(x, y, width, xy, index),
-                    onTap: () {
-                      print("index ======> $index");
-                      print("x ======> $x");
-                      print("y ======> $y");
-                    },
-                  );
-                },
-              )
+              CustomPaint(
+                painter: PaintImage2(),
+              ),
+              CustomPaint(
+                painter: PaintImage3(),
+              ),
+              CustomPaint(
+                painter: PaintImage(snakePosition: snakePosition),
+              ),
+              // GridView.builder(
+              //   physics: NeverScrollableScrollPhysics(),
+              //   padding: EdgeInsets.all(0),
+              //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //       crossAxisCount: GAME_PAD_MATRIX_W, childAspectRatio: 1),
+              //   itemCount: GAME_PAD_MATRIX_H * GAME_PAD_MATRIX_W,
+              //   itemBuilder: (context, index) {
+              //     List<int> xy = [];
+              //     int x, y = 0;
+              //     x = (index / GAME_PAD_MATRIX_W).floor();
+              //     y = (index % GAME_PAD_MATRIX_H);
+              //     xy.add(x);
+              //     xy.add(y);
+              //     // print("x ===> $x");
+              //     // print("y ===> $y");
+              //     return GestureDetector(
+              //       child: rowSelected(x, y, width, xy, index),
+              //       onTap: () {
+              //         print("index ======> $index");
+              //         print("x ======> $x");
+              //         print("y ======> $y");
+              //       },
+              //     );
+              //   },
+              // )
             ])));
   }
 
   rowSelected(int x, int y, double width, List<int> xy, int index) {
     Color color;
 
-    print("index ====>>>>> $index");
+    // print("index ====>>>>> $index");
     if (snakePosition.contains(index)) {
       color = brickColors[1];
     } else {
@@ -142,51 +154,76 @@ class PlayerPanelState extends State<PlayerPanel> {
 
   void startingSnake() {
     snakePosition = [
-      43,
+      // 83,
+      // 73,
+      // 63,
+      // 53,
+      // 43,
       33,
       23,
+      13,
+      3
     ];
   }
 
   getLatestSnake() {
-    var newHeadPos;
+    // var newHeadPos;
+    // var currentHeadPos = snakePosition;
     widget.screenBloc.snakeGameStates.listen((direction) {
-      switch (direction) {
-        case Direction.LEFT:
-          var currentHeadPos = snakePosition;
-          currentHeadPos.insert(0, currentHeadPos[0] - 1);
-          currentHeadPos.removeLast();
-          snakePosition = currentHeadPos;
-          print("snakePosition ====>>>>> $snakePosition");
-          break;
+      setState(() {
+        switch (direction) {
+          case Direction.LEFT:
+            var currentHeadPos = snakePosition;
+            snakePosition.insert(0, currentHeadPos[0] - 1);
+            snakePosition.removeLast();
+            // setState(() {
+            // snakePosition = currentHeadPos;
+            // });
+            print("snakePosition ====>>>>> $snakePosition");
+            break;
 
-        case Direction.RIGHT:
-          var currentHeadPos = snakePosition;
-          currentHeadPos.insert(0, currentHeadPos[0] + 1);
-          currentHeadPos.removeLast();
-          snakePosition = currentHeadPos;
-          print("snakePosition ====>>>>> $snakePosition");
-          break;
+          case Direction.RIGHT:
+            var currentHeadPos = snakePosition;
+            // snakePosition.insert(0, currentHeadPos[0] + 1);
+            // snakePosition.removeLast();
+            setState(() {
+              currentHeadPos.add(currentHeadPos[0] + 1);
+              currentHeadPos.lastIndexOf(0);
+              // currentHeadPos.sort();
+              snakePosition = currentHeadPos;
+            });
 
-        case Direction.UP:
-          var currentHeadPos = snakePosition;
-          currentHeadPos.insert(0, currentHeadPos[0] - 10);
-          currentHeadPos.removeLast();
-          snakePosition = currentHeadPos;
-          print("snakePosition ====>>>>> $snakePosition");
-          break;
+            // setState(() {
+            //   snakePosition = currentHeadPos;
+            // });
 
-        case Direction.DOWN:
-          var currentHeadPos = snakePosition;
-          currentHeadPos.insert(0, currentHeadPos[0] + 10);
-          currentHeadPos.removeLast();
-          snakePosition = currentHeadPos;
-          print("snakePosition ====>>>>> $snakePosition");
-          break;
-      }
+            print("snakePosition ====>>>>> $snakePosition");
+            break;
+
+          case Direction.UP:
+            var currentHeadPos = snakePosition;
+            snakePosition.insert(0, currentHeadPos[0] - 10);
+            snakePosition.removeLast();
+            // setState(() {
+            // snakePosition = currentHeadPos;
+            // });
+            print("snakePosition ====>>>>> $snakePosition");
+            break;
+
+          case Direction.DOWN:
+            var currentHeadPos = snakePosition;
+            snakePosition.insert(0, currentHeadPos[0] + 10);
+            snakePosition.removeLast();
+            // setState(() {
+            // snakePosition = currentHeadPos;
+            // });
+            print("snakePosition ====>>>>> $snakePosition");
+            break;
+        }
+      });
     });
 
-    return snakePosition;
+    // return snakePosition;
   }
 
   void onTimeTick(Timer timer) {
@@ -198,10 +235,10 @@ class PlayerPanelState extends State<PlayerPanel> {
     //   timer.cancel();
     // } else
     if (widget.screenBloc.gameState == GameState.START) {
-      setState(() {
-        getLatestSnake();
-        print("snakePosition =======> $snakePosition");
-      });
+      // setState(() {
+      getLatestSnake();
+      print("snakePosition =======> $snakePosition");
+      // });
     }
   }
 }

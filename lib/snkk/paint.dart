@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PaintImage extends CustomPainter {
-
-  final List<List<int>> snakePosition;
+  final List<int> snakePosition;
 
   PaintImage({@required this.snakePosition});
 
@@ -26,23 +25,30 @@ class PaintImage extends CustomPainter {
       ..style = PaintingStyle.fill;
     // for (var item in snakePosition) {
 
+      
 
-
-      for (var i = 0; i < row; i++) {
-        index += 1;
-        // if(snakePosition[index][1] == i){
-        //   _paintSelColor.color = Colors.black87;
-        // } else {
-        //   _paintSelColor.color = Colors.black12;
-        // }
+    for (var i = 0; i < row; i++) {
+      index += 1;
+      // if(snakePosition[index][1] == i){
+      //   _paintSelColor.color = Colors.black87;
+      // } else {
+      //   _paintSelColor.color = Colors.black12;
+      // }
       dx += 19.3;
       dy = -10;
       for (var j = 0; j < column; j++) {
-        if(snakePosition[0][0] == i && snakePosition[0][1] == j){
-          _paintSelColor.color = Colors.black87;
-        } else {
-          _paintSelColor.color = Colors.black12;
-        }
+        index += 1;
+        // if(snakePosition[0][0] == i && snakePosition[0][1] == j){
+        //   _paintSelColor.color = Colors.black87;
+        // } else {
+          if(snakePosition[0] == index){
+            _paintSelColor.color = Colors.black87;
+          } else {
+            _paintSelColor.color = Colors.black12;
+          }
+          
+        
+        // }
         dy += 19.3;
         canvas.drawRect(
             Rect.fromCenter(center: Offset(dx, dy), width: 10, height: 10),
@@ -50,7 +56,6 @@ class PaintImage extends CustomPainter {
       }
     }
     // }
-    
   }
 
   @override
