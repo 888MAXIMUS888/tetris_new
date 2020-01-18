@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
-import 'package:new_tetris/games/snake.dart';
+// import 'package:new_tetris/games/snake.dart';
 import 'package:new_tetris/games/tetris.dart';
+import 'package:new_tetris/snkk/player_panel.dart';
+import 'package:new_tetris/snkk/snk.dart';
 
 class KeyboardController extends StatefulWidget {
   final Widget child;
@@ -29,12 +31,12 @@ class _KeyboardControllerState extends State<KeyboardController> {
 
     final key = event.data.physicalKey;
     final tetrisGame = TetrisGame.of(context);
-    final snakeGame = SnakeGame.of(context);
+    // final snakeGame = PlayerPanel.of(context);
     
     if(widget.screenBloc.typeGameSelected == TypeGame.tetris){
       keyboardEvent(key, tetrisGame);
     } else {
-      keyboardEvent(key, snakeGame);
+      keyboardEvent2(key);
     }
   }
 
@@ -50,6 +52,7 @@ class _KeyboardControllerState extends State<KeyboardController> {
   }
 
   keyboardEvent(key, gameSelect){
+    print("widget.screenBloc.typeGameSelected ===>>> ${widget.screenBloc.typeGameSelected}");
       if (key == PhysicalKeyboardKey.arrowUp) {
       gameSelect.up();
     } else if (key == PhysicalKeyboardKey.arrowDown) {
@@ -66,6 +69,44 @@ class _KeyboardControllerState extends State<KeyboardController> {
       gameSelect.soundSwitch();
     } else if (key == PhysicalKeyboardKey.keyR) {
       gameSelect.reset();
+    }
+    }
+
+    keyboardEvent2(key){
+    print("widget.screenBloc.typeGameSelected ===>>> ${widget.screenBloc.typeGameSelected}");
+      if (key == PhysicalKeyboardKey.arrowUp) {
+      // widget.screenBloc.up();
+      widget.screenBloc.up();
+      setState(() {
+        
+      });
+    } else if (key == PhysicalKeyboardKey.arrowDown) {
+      // gameSelect.down();
+      widget.screenBloc.down();
+       setState(() {
+        
+      });
+    } else if (key == PhysicalKeyboardKey.arrowLeft) {
+      // gameSelect.left();
+      widget.screenBloc.left();
+       setState(() {
+        
+      });
+    } else if (key == PhysicalKeyboardKey.arrowRight) {
+      // gameSelect.right();
+      widget.screenBloc.right();
+       setState(() {
+        
+      });
+    } else if (key == PhysicalKeyboardKey.space) {
+      // gameSelect.drop();
+      widget.screenBloc.drop();
+    } else if (key == PhysicalKeyboardKey.keyP) {
+      // gameSelect.pauseOrResume();
+    } else if (key == PhysicalKeyboardKey.keyS) {
+      // gameSelect.soundSwitch();
+    } else if (key == PhysicalKeyboardKey.keyR) {
+      // gameSelect.reset();
     }
     }
 }

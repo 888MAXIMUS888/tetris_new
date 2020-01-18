@@ -6,7 +6,6 @@ import 'dart:math' as math;
 
 import 'package:new_tetris/game_controller/widgets/button.dart';
 import 'package:new_tetris/game_controller/widgets/description.dart';
-import 'package:new_tetris/games/snake.dart';
 import 'package:new_tetris/games/tetris.dart';
 
 class RightController extends StatelessWidget {
@@ -99,7 +98,7 @@ class RightController extends StatelessWidget {
                       onTap: () {
                         screenBloc.typeGameSelected == TypeGame.tetris
                             ? TetrisGame.of(context).rotate()
-                            : SnakeGame.of(context).up();
+                            : screenBloc.up();
                       }),
                   SizedBox(width: directionSpace),
                   Button(
@@ -127,7 +126,7 @@ class RightController extends StatelessWidget {
                           TetrisGame.of(context).right();
                         } else if (screenBloc.typeGameSelected ==
                             TypeGame.snake) {
-                          SnakeGame.of(context).right();
+                          screenBloc.right();
                         }
                       })
                 ],
@@ -161,7 +160,7 @@ class RightController extends StatelessWidget {
                           TetrisGame.of(context).left();
                         } else if (screenBloc.typeGameSelected ==
                             TypeGame.snake) {
-                          SnakeGame.of(context).left();
+                          screenBloc.left();
                         }
                       }),
                   SizedBox(width: directionSpace),
@@ -171,7 +170,7 @@ class RightController extends StatelessWidget {
                     onTap: () {
                       screenBloc.typeGameSelected == TypeGame.tetris
                           ? TetrisGame.of(context).down()
-                          : SnakeGame.of(context).down();
+                          : screenBloc.down();
                     },
                   ),
                 ],
@@ -191,9 +190,10 @@ class RightController extends StatelessWidget {
                 color: Theme.of(context).focusColor,
                 onTap: () {
                   openSettingsScreen = !openSettingsScreen;
-                  screenBloc.typeGameSelected == TypeGame.tetris
-                      ? TetrisGame.of(context).settings(screenBloc)
-                      : SnakeGame.of(context).settings(screenBloc);
+                  // screenBloc.typeGameSelected == TypeGame.tetris
+                  //     ?
+                  TetrisGame.of(context).settings(screenBloc);
+                  // : SnakeGame.of(context).settings(screenBloc);
                   print("openSettingsScreen  =>> $openSettingsScreen");
                 }),
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/briks.dart';
-import 'package:new_tetris/games/snake.dart';
+// import 'package:new_tetris/games/snake.dart';
 import 'package:new_tetris/games/tetris.dart';
 
 enum TypeGame { tetris, snake }
@@ -70,15 +70,15 @@ class _PlayerPad extends StatelessWidget {
           );
         } else {
           return Column(
-            children: SnakeGameState.of(context).data.map((list) {
-              return Row(
-                children: list.map((b) {
-                  return b == 1
-                      ? const Brik.normal()
-                      : b == 2 ? const Brik.highlight() : const Brik.empty();
-                }).toList(),
-              );
-            }).toList(),
+            // children: SnakeGameState.of(context).data.map((list) {
+            //   return Row(
+            //     children: list.map((b) {
+            //       return b == 1
+            //           ? const Brik.normal()
+            //           : b == 2 ? const Brik.highlight() : const Brik.empty();
+            //     }).toList(),
+            //   );
+            // }).toList(),
           );
         }
       },
