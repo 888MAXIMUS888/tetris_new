@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
+import 'package:new_tetris/main.dart';
 import 'package:new_tetris/snkk/paint.dart';
 import 'package:new_tetris/snkk/paint2.dart';
 import 'package:new_tetris/snkk/paint3.dart';
@@ -45,7 +46,7 @@ Size getBrikSizeForScreenWidth(double width) {
   return Size.square((width - _PLAYER_PANEL_PADDING) / GAME_PAD_MATRIX_W);
 }
 
-class PlayerPanel extends StatefulWidget {
+class PlayerPanel extends StatefulWidget with RouteAware {
   final ScreenBloc screenBloc;
   final playerPanelWidth;
 
@@ -56,20 +57,49 @@ class PlayerPanel extends StatefulWidget {
   }
 }
 
-class PlayerPanelState extends State<PlayerPanel> {
+class PlayerPanelState extends State<PlayerPanel> with RouteAware {
   List<Color> brickColors = [Colors.black12, Colors.black87];
   List<int> snake = [1, 1];
-  // int indexes = 20;
   Timer timer;
-  List<int> snakePosition = [33, 23, 13, 3];
+  List<int> snakePosition = [];
 
   @override
   void initState() {
     startingSnake();
-    // if (widget.screenBloc.gameState == GameState.START) {
-    timer = new Timer.periodic(new Duration(milliseconds: 1000), onTimeTick);
-    // }
+    widget.screenBloc.snakeGameStates.listen((states) {
+      if (states == GameState.START) {
+        return getLatestSnake();
+      } else if (states == GameState.FAILURE) {
+        timer.cancel();
+      } else {
+        return Stack(
+          children: <Widget>[
+            Positioned(
+                left: 400,
+                top: 400,
+                child: Center(
+                    child: Container(
+                  child: Text("Snake"),
+                ))),
+          ],
+        );
+      }
+    });
+
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    // timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -83,15 +113,6 @@ class PlayerPanelState extends State<PlayerPanel> {
               border: Border.all(color: Colors.black),
             ),
             child: Stack(children: <Widget>[
-              // CustomPaint(
-              //   painter: PaintImage2(),
-              // ),
-              // CustomPaint(
-              //   painter: PaintImage3(),
-              // ),
-              // CustomPaint(
-              //   painter: PaintImage(snakePosition: snakePosition),
-              // ),
               GridView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.all(0),
@@ -105,8 +126,6 @@ class PlayerPanelState extends State<PlayerPanel> {
                   y = (index % GAME_PAD_MATRIX_H);
                   xy.add(x);
                   xy.add(y);
-                  // print("x ===> $x");
-                  // print("y ===> $y");
                   return GestureDetector(
                     child: rowSelected(x, y, width, xy, index),
                     onTap: () {
@@ -153,32 +172,24 @@ class PlayerPanelState extends State<PlayerPanel> {
   }
 
   void startingSnake() {
-    snakePosition = [
-      // 83,
-      // 73,
-      // 63,
-      // 53,
-      // 43,
-      33,
-      23,
-      13,
-      3
-    ];
+    snakePosition = [153, 163, 173, 183];
   }
 
   getLatestSnake() {
-    // var newHeadPos;
-    // var currentHeadPos = snakePosition;
-    widget.screenBloc.snakeGameStates.listen((direction) {
+    timer = Timer.periodic(Duration(milliseconds: 600), (t) {
+      if (widget.screenBloc.isStoped == true) {
+        t.cancel();
+        widget.screenBloc.isStoped = false;
+        getLatestSnake();
+      }
       setState(() {
-        switch (direction) {
+        print(
+            "widget.screenBloc.direction ====> ${widget.screenBloc.direction}");
+        switch (widget.screenBloc.direction) {
           case Direction.LEFT:
             var currentHeadPos = snakePosition;
             snakePosition.insert(0, currentHeadPos[0] - 1);
             snakePosition.removeLast();
-            // setState(() {
-            // snakePosition = currentHeadPos;
-            // });
             print("snakePosition ====>>>>> $snakePosition");
             break;
 
@@ -186,16 +197,6 @@ class PlayerPanelState extends State<PlayerPanel> {
             var currentHeadPos = snakePosition;
             snakePosition.insert(0, currentHeadPos[0] + 1);
             snakePosition.removeLast();
-            // setState(() {
-            //   currentHeadPos.add(currentHeadPos[0] + 1);
-            //   currentHeadPos.lastIndexOf(0);
-              // currentHeadPos.sort();
-              // snakePosition = currentHeadPos;
-            // });
-
-            // setState(() {
-            //   snakePosition = currentHeadPos;
-            // });
 
             print("snakePosition ====>>>>> $snakePosition");
             break;
@@ -204,9 +205,7 @@ class PlayerPanelState extends State<PlayerPanel> {
             var currentHeadPos = snakePosition;
             snakePosition.insert(0, currentHeadPos[0] - 10);
             snakePosition.removeLast();
-            // setState(() {
-            // snakePosition = currentHeadPos;
-            // });
+
             print("snakePosition ====>>>>> $snakePosition");
             break;
 
@@ -214,31 +213,16 @@ class PlayerPanelState extends State<PlayerPanel> {
             var currentHeadPos = snakePosition;
             snakePosition.insert(0, currentHeadPos[0] + 10);
             snakePosition.removeLast();
-            // setState(() {
-            // snakePosition = currentHeadPos;
-            // });
+
             print("snakePosition ====>>>>> $snakePosition");
             break;
         }
       });
     });
-
-    // return snakePosition;
   }
 
-  void onTimeTick(Timer timer) {
-    // if (snakePosition[0] + snakePosition[0] > 200 ||
-    //     // snakePosition[0] + snakePosition[0] > GAME_PAD_MATRIX_W ||
-    //     // snakePosition[0] < 0 ||
-    //     snakePosition[0] < 0) {
-    //   gameState = GameState.FAILURE;
-    //   timer.cancel();
-    // } else
-    if (widget.screenBloc.gameState == GameState.START) {
-      // setState(() {
-      getLatestSnake();
-      print("snakePosition =======> $snakePosition");
-      // });
-    }
+  onTimeTick() {
+    getLatestSnake();
+    print("snakePosition =======> $snakePosition");
   }
 }

@@ -29,14 +29,16 @@ class ScreenBloc {
   TypeGame typeGameSelected = TypeGame.tetris;
   GameStates states = GameStates.selectedTetris;
 
-  Direction direction = Direction.RIGHT;
+  Direction direction = Direction.UP;
   var gameState = GameState.NONE;
+  bool isStoped = false;
 
   final settingsScreen = BehaviorSubject();
   final openSettings = BehaviorSubject<bool>();
   final typeGame = BehaviorSubject.seeded("tetris");
   final gameStates = BehaviorSubject();
-  final snakeGameStates = BehaviorSubject.seeded(Direction.DOWN);
+  final snakeGameStates = BehaviorSubject.seeded(GameState.NONE);
+  
 
   Observable get outSettingsScreen => settingsScreen.stream;
   Observable<bool> get outOpenSettings => openSettings.stream;
@@ -48,9 +50,9 @@ class ScreenBloc {
   void drop() async {
     // setState(() {
     // states = GameStates.runningSnake;
-    
+    snakeGameStates.add(GameState.START);
     states = GameStates.selectedTetris;
-    gameState = GameState.START;
+    // gameState = GameState.START;
     // snakeGameStates.add(GameState.START);
     // });
   }
@@ -58,19 +60,27 @@ class ScreenBloc {
 
      void up() {
     // direction = Direction.UP;
-    snakeGameStates.add(Direction.UP);
+    // snakeGameStates.add(Direction.UP);
+    direction = Direction.UP;
+    isStoped = true;
   }
 
   void right() {
-   snakeGameStates.add(Direction.RIGHT);
+  //  snakeGameStates.add(Direction.RIGHT);
+   direction = Direction.RIGHT;
+   isStoped = true;
   }
 
   void left() {
-    snakeGameStates.add(Direction.LEFT);
+    // snakeGameStates.add(Direction.LEFT);
+    direction = Direction.LEFT;
+    isStoped = true;
   }
 
   void down() {
-    snakeGameStates.add(Direction.DOWN);
+    // snakeGameStates.add(Direction.DOWN);
+    direction = Direction.DOWN;
+    isStoped = true;
   }
 
   void dispose() {
