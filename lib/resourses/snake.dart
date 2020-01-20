@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-import 'package:new_tetris/games/snake.dart';
+// import 'package:new_tetris/games/snake.dart';
 
 const BLOCK_SHAPES = {
   BlockType.I: [
@@ -69,9 +69,10 @@ class Snake {
   }
 
   bool isValidInMatrix(List<List<int>> matrix) {
-    if (xy[1] + shape.length > GAME_PAD_MATRIX_H ||
+    if (
+      // xy[1] + shape.length > GAME_PAD_MATRIX_H ||
         xy[1] < 0 ||
-        xy[0] + shape[1].length > GAME_PAD_MATRIX_W ||
+        // xy[0] + shape[1].length > GAME_PAD_MATRIX_W ||
         xy[0] < 0) {
       return false;
     }

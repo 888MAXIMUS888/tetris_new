@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/game_controller/widgets/button.dart';
 import 'package:new_tetris/game_controller/widgets/description.dart';
-import 'package:new_tetris/games/snake.dart';
+// import 'package:new_tetris/games/snake.dart';
 import 'package:new_tetris/games/tetris.dart';
 
 class SystemButtonGroup extends StatelessWidget {
@@ -23,9 +23,10 @@ class SystemButtonGroup extends StatelessWidget {
               color: Theme.of(context).indicatorColor,
               enableLongPress: false,
               onTap: () {
-                screenBloc.typeGameSelected == TypeGame.tetris
-                    ? TetrisGame.of(context).soundSwitch()
-                    : SnakeGame.of(context).soundSwitch();
+                // screenBloc.typeGameSelected == TypeGame.tetris
+                //     ? 
+                    TetrisGame.of(context).soundSwitch();
+                    // : SnakeGame.of(context).soundSwitch();
               }),
         ),
         Description(
@@ -35,9 +36,10 @@ class SystemButtonGroup extends StatelessWidget {
               color: Theme.of(context).indicatorColor,
               enableLongPress: false,
               onTap: () {
-                screenBloc.typeGameSelected == TypeGame.tetris
-                    ? TetrisGame.of(context).pauseOrResume()
-                    : SnakeGame.of(context).pauseOrResume();
+                // screenBloc.typeGameSelected == TypeGame.tetris
+                //     ? 
+                    TetrisGame.of(context).pauseOrResume();
+                    // : SnakeGame.of(context).pauseOrResume();
               }),
         ),
         Description(
@@ -47,9 +49,10 @@ class SystemButtonGroup extends StatelessWidget {
               enableLongPress: false,
               color: Theme.of(context).focusColor,
               onTap: () {
-                screenBloc.typeGameSelected == TypeGame.tetris
-                    ? TetrisGame.of(context).reset()
-                    : SnakeGame.of(context).reset();
+                // screenBloc.typeGameSelected == TypeGame.tetris
+                //     ? 
+                    TetrisGame.of(context).reset();
+                    // : SnakeGame.of(context).reset();
               }),
         )
       ],
