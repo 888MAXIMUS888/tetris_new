@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/game_controller/game_controller.dart';
-import 'package:new_tetris/games/tetris.dart';
+import 'package:new_tetris/games/snake/player_panel.dart';
 import 'package:new_tetris/material.dart';
-import 'package:new_tetris/snkk/player_panel.dart';
 
 const Color SCREEN_BACKGROUND = Color(0xff9ead86);
 final screenBorderWidth = 3.0;
 
-class SNK extends StatefulWidget {
+class Snake extends StatefulWidget {
   final ScreenBloc screenBloc;
 
-  SNK({@required this.screenBloc});
+  Snake({@required this.screenBloc});
 
   @override
   State<StatefulWidget> createState() {
-    return SNKState();
+    return SnakeState();
   }
 }
 
-class SNKState extends State<SNK> {
+class SnakeState extends State<Snake> {
   
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
@@ -15,6 +16,8 @@ const _PLAYER_PANEL_PADDING = 6;
 const GAME_PAD_MATRIX_W = 10;
 
 const GAME_PAD_MATRIX_H = 20;
+
+const _REST_LINE_DURATION = const Duration(milliseconds: 50);
 
 class BrikSize2 extends InheritedWidget {
   const BrikSize2({
@@ -56,25 +59,30 @@ class PlayerPanel extends StatefulWidget with RouteAware {
 
 class PlayerPanelState extends State<PlayerPanel> with RouteAware {
   List<Color> brickColors = [Colors.black12, Colors.black87];
-  List<int> snake = [1, 1];
+  final Random _random = Random();
+
+  int brickPoint;
   Timer timer;
   List<int> snakePosition = [];
-  int x2, y2 = 0;
   Offset offset;
   int x;
   int y;
-  int index1;
   var widthPosition;
+  var widthPosition2;
   var heightPosition;
+  List<int> _data = [];
 
   final GlobalKey _globalKey = GlobalKey();
 
   @override
   void initState() {
-    startingSnake();
+    // startingSnake();
+    // generateBrick();
     widget.screenBloc.snakeGameStates.listen((states) {
       print("states states states states states ===> $states");
       if (states == GameState.START) {
+        startingSnake();
+        generateBrick();
         return getLatestSnake();
       } else if (states == GameState.FAILURE) {
         timer.cancel();
@@ -86,7 +94,7 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
                 top: 400,
                 child: Center(
                     child: Container(
-                  child: Text("Snake"),
+                  child: Text("Snake", style: TextStyle(fontSize: 40),),
                 ))),
           ],
         );
@@ -112,48 +120,66 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final width = BrikSize2.of(context).size.width;
-    return SizedBox.fromSize(
-        size: Size(widget.playerPanelWidth, widget.playerPanelWidth * 2),
-        child: Container(
-            padding: EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-            ),
-            child: Stack(children: <Widget>[
-              GridView.builder(
-                key: _globalKey,
-                physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.all(0),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: GAME_PAD_MATRIX_W, childAspectRatio: 1),
-                itemCount: GAME_PAD_MATRIX_H * GAME_PAD_MATRIX_W,
-                itemBuilder: (context, index) {
-                  index1 = index;
-                  List<int> xy = [];
-                  // int x, y = 0;
-                  x = (index / GAME_PAD_MATRIX_W).floor();
-                  y = (index % GAME_PAD_MATRIX_H);
-                  xy.add(x);
-                  xy.add(y);
-                  return GestureDetector(
-                    child: rowSelected(x, y, width, xy, index, _globalKey),
-                    onTapDown: (details) {
-                      var widthPosition =
-                          (snakePosition[0] / GAME_PAD_MATRIX_W);
-                      var heightPosition =
-                          (snakePosition[0] % GAME_PAD_MATRIX_H);
-                      print("widthPosition ======> $widthPosition");
-                      print("heightPosition ======> $heightPosition");
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      children: <Widget>[
+        SizedBox.fromSize(
+            size: Size(widget.playerPanelWidth, widget.playerPanelWidth * 2),
+            child: Container(
+                padding: EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                ),
+                child: Stack(children: <Widget>[
+                  GridView.builder(
+                    key: _globalKey,
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.all(0),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: GAME_PAD_MATRIX_W, childAspectRatio: 1),
+                    itemCount: GAME_PAD_MATRIX_H * GAME_PAD_MATRIX_W,
+                    itemBuilder: (context, index) {
+                      List<int> xy = [];
+                      // int x, y = 0;
+                      x = (index / GAME_PAD_MATRIX_W).floor();
+                      y = (index % GAME_PAD_MATRIX_H);
+                      xy.add(x);
+                      xy.add(y);
+                      return GestureDetector(
+                        child: rowSelected(x, y, width, xy, index, _globalKey),
+                        onTapDown: (details) {
+                          var widthPosition =
+                              (snakePosition[0] / GAME_PAD_MATRIX_W);
+                          var heightPosition =
+                              (snakePosition[0] % GAME_PAD_MATRIX_H);
+                          print("widthPosition ======> $widthPosition");
+                          print("heightPosition ======> $heightPosition");
+                        },
+                      );
                     },
-                  );
-                },
-              )
-            ])));
+                  )
+                ]))),
+                StreamBuilder(
+                  stream: widget.screenBloc.outTypeGame,
+                  builder: (context, snapshot){
+                    if(snapshot.data != null){
+                      return Center(child: Text(snapshot.data.toString(), style: TextStyle(fontSize: 20),));
+                    } else {
+                      return Container();
+                    }
+                    
+                  },
+                )
+                
+      ],
+    );
   }
 
   rowSelected(int x, int y, double width, List<int> xy, int index, globalKey) {
     Color color;
-    if (snakePosition.contains(index)) {
+    if (snakePosition.contains(index) ||
+        brickPoint == index ||
+        _data.contains(index)) {
       color = brickColors[1];
     } else {
       color = brickColors[0];
@@ -182,7 +208,7 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
   }
 
   void startingSnake() {
-    snakePosition = [53, 63, 73, 83];
+    snakePosition = [33, 43, 53, 63, 73, 83, 93, 103, 113, 123];
   }
 
   getLatestSnake() {
@@ -194,13 +220,13 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
       }
       setState(() {
         widthPosition = (snakePosition[0] % GAME_PAD_MATRIX_W).floor();
+        widthPosition2 = (snakePosition[1] % GAME_PAD_MATRIX_W).floor();
         heightPosition = (snakePosition[0] % GAME_PAD_MATRIX_H).floor();
         switch (widget.screenBloc.direction) {
           case Direction.LEFT:
             var currentHeadPos = snakePosition;
             snakePosition.insert(0, currentHeadPos[0] - 1);
             snakePosition.removeLast();
-            print("snakePosition ====>>>>> $snakePosition");
             failureSnake();
 
             print("widthPosition ====>>>>> $widthPosition");
@@ -212,7 +238,6 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
             snakePosition.insert(0, currentHeadPos[0] + 1);
             snakePosition.removeLast();
 
-            print("snakePosition ====>>>>> $snakePosition");
             failureSnake();
             print("widthPosition ====>>>>> $widthPosition");
             print("heightPosition ====>>>>> $heightPosition");
@@ -223,7 +248,6 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
             snakePosition.insert(0, currentHeadPos[0] - 10);
             snakePosition.removeLast();
 
-            print("snakePosition ====>>>>> $snakePosition");
             failureSnake();
             print("widthPosition ====>>>>> $widthPosition");
             print("heightPosition ====>>>>> $heightPosition");
@@ -234,7 +258,6 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
             snakePosition.insert(0, currentHeadPos[0] + 10);
             snakePosition.removeLast();
 
-            print("snakePosition ====>>>>> $snakePosition");
             failureSnake();
             print("widthPosition ====>>>>> $widthPosition");
             print("heightPosition ====>>>>> $heightPosition");
@@ -245,9 +268,62 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
   }
 
   failureSnake() {
-    print(" failure X = > $x");
-    if (snakePosition[0] < 0 || snakePosition[0] > 199 || widthPosition >= 9) {
+    if (snakePosition[0] < 0 ||
+        snakePosition[0] > 199 ||
+        widthPosition == 0 && heightPosition == 10 ||
+        heightPosition == 0 && widthPosition == 0) {
+      snakePosition.removeRange(0, 2);
       widget.screenBloc.snakeGameStates.add(GameState.FAILURE);
+      restart();
+    } else if (snakePosition[0] == brickPoint) {
+      snakePosition.add(brickPoint);
+      generateBrick();
+      print("brickPoint ========> $brickPoint");
     }
+  }
+
+  generateBrick() {
+    brickPoint = _random.nextInt(199);
+  }
+
+  restart() async {
+    List<int> line = [];
+    int inde = 200;
+    var index = -1;
+
+    await Future.doWhile(() async {
+      for (var i = 0; i < 10; i++) {
+        inde -= 1;
+        line.add(inde);
+      }
+      for (int i = 0; i < GAME_PAD_MATRIX_W; i++) {
+        _data = line.toSet().toList();
+
+        print("_data =======>>>> $_data");
+      }
+      setState(() {});
+      await Future.delayed(_REST_LINE_DURATION);
+
+      return !_data.contains(0);
+    });
+
+    await Future.doWhile(() async {
+      List<int> list = [];
+
+      for (var i = 0; i < 10; i++) {
+        index += 1;
+        list.add(index);
+      }
+      for (var i = 0; i < 10; i++) {
+        list.forEach((data1) => _data.removeWhere((data) => data == data1));
+      }
+
+      setState(() {});
+      await Future.delayed(_REST_LINE_DURATION);
+      snakePosition.clear();
+      brickPoint = null;
+      widget.screenBloc.snakeGame();
+      return _data.contains(199);
+    });
   }
 }

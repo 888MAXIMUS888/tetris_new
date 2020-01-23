@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:new_tetris/audios.dart';
 import 'package:new_tetris/bloc/ads_bloc.dart';
-import 'package:new_tetris/bloc/bloc_provider.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/bloc/settings_bloc.dart';
 import 'package:new_tetris/game_controller/game_controller.dart';
 import 'package:new_tetris/game_controller/keyboard_controller.dart';
-// import 'package:new_tetris/games/snake.dart';
+import 'package:new_tetris/games/snake/snake_game.dart';
 import 'package:new_tetris/games/tetris.dart';
 import 'package:new_tetris/screen_decoration.dart';
-import 'package:new_tetris/snkk/snk.dart';
 
 class Tetris extends StatefulWidget {
   @override
@@ -69,26 +67,7 @@ class TetrisState extends State<Tetris> {
             print("snake");
             return 
             KeyboardController(child:
-             SNK(screenBloc: screenBloc));
-            // return Sound(
-            //     child: SnakeGame(
-            //         screenBloc: screenBloc,
-            //         child: KeyboardController(
-            //             screenBloc: screenBloc,
-            //             child: Container(
-            //                 padding: MediaQuery.of(context).padding,
-            //                 child: Column(children: <Widget>[
-            //                   SizedBox(height: 52),
-            //                   Spacer(),
-            //                   ScreenDecoration(
-            //                     screenBloc: screenBloc,
-            //                     gameState: SnakeGameState.of(context),
-            //                   ),
-            //                   Spacer(
-            //                     flex: 1,
-            //                   ),
-            //                   GameController(screenBloc: screenBloc)
-            //                 ])))));
+             Snake(screenBloc: screenBloc));
           }
         },
       ),

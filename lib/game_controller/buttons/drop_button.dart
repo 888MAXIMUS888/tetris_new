@@ -4,9 +4,7 @@ import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/bloc/settings_bloc.dart';
 import 'package:new_tetris/game_controller/widgets/button.dart';
 import 'package:new_tetris/game_controller/widgets/description.dart';
-// import 'package:new_tetris/games/snake.dart';
 import 'package:new_tetris/games/tetris.dart';
-import 'package:new_tetris/snkk/player_panel.dart';
 
 class DropButton extends StatelessWidget {
   final ScreenBloc screenBloc;
