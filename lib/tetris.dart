@@ -65,9 +65,9 @@ class TetrisState extends State<Tetris> {
                             ])))));
           } else {
             print("snake");
-            return 
-            KeyboardController(child:
-             Snake(screenBloc: screenBloc));
+            return Sound(
+                child:
+                    KeyboardController(child: Snake(screenBloc: screenBloc)));
           }
         },
       ),

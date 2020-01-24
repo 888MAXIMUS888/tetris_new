@@ -126,7 +126,7 @@ class RightController extends StatelessWidget {
                           TetrisGame.of(context).right();
                         } else if (screenBloc.typeGameSelected ==
                             TypeGame.snake) {
-                          screenBloc.right();
+                          screenBloc.right(settingsBloc);
                         }
                       })
                 ],
@@ -160,7 +160,7 @@ class RightController extends StatelessWidget {
                           TetrisGame.of(context).left();
                         } else if (screenBloc.typeGameSelected ==
                             TypeGame.snake) {
-                          screenBloc.left();
+                          screenBloc.left(settingsBloc);
                         }
                       }),
                   SizedBox(width: directionSpace),
@@ -190,10 +190,10 @@ class RightController extends StatelessWidget {
                 color: Theme.of(context).focusColor,
                 onTap: () {
                   openSettingsScreen = !openSettingsScreen;
-                  // screenBloc.typeGameSelected == TypeGame.tetris
-                  //     ?
-                  TetrisGame.of(context).settings(screenBloc);
-                  // : SnakeGame.of(context).settings(screenBloc);
+                  screenBloc.typeGameSelected == TypeGame.tetris
+                      ?
+                  TetrisGame.of(context).settings(screenBloc)
+                  : screenBloc.settings();
                   print("openSettingsScreen  =>> $openSettingsScreen");
                 }),
           ),

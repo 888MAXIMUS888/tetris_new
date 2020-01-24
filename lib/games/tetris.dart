@@ -14,8 +14,6 @@ const GAME_PAD_MATRIX_H = 20;
 ///the width of game pad
 const GAME_PAD_MATRIX_W = 10;
 
-enum SettingsStates { closedSettings, openSettings }
-
 class TetrisGame extends StatefulWidget {
   final Widget child;
   final ScreenBloc screenBloc;
@@ -104,7 +102,7 @@ class GameControl extends State<TetrisGame> with RouteAware {
 
   Block _next = Block.getRandom();
 
-  SettingsStates _settinngsStates = SettingsStates.closedSettings;
+  
 
   Block _getNext() {
     final next = _next;
@@ -364,15 +362,15 @@ class GameControl extends State<TetrisGame> with RouteAware {
 
   settings(ScreenBloc screenBloc) {
     // GameStates gameState = _states;
-    debugPrint("_settinngsStates : $_settinngsStates");
+    debugPrint("_settinngsStates : $screenBloc.settinngsStates");
 
-    if (_settinngsStates == SettingsStates.openSettings) {
+    if (screenBloc.settinngsStates == SettingsStates.openSettings) {
       screenBloc.settingsScreen.add(null);
-      _settinngsStates = SettingsStates.closedSettings;
+      screenBloc.settinngsStates = SettingsStates.closedSettings;
     } else {
       screenBloc.settingsScreen.add(Settings());
       setState(() {
-        _settinngsStates = SettingsStates.openSettings;
+        screenBloc.settinngsStates = SettingsStates.openSettings;
         pause();
       });
     }

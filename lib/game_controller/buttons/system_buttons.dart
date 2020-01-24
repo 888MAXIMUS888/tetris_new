@@ -36,10 +36,10 @@ class SystemButtonGroup extends StatelessWidget {
               color: Theme.of(context).indicatorColor,
               enableLongPress: false,
               onTap: () {
-                // screenBloc.typeGameSelected == TypeGame.tetris
-                //     ? 
-                    TetrisGame.of(context).pauseOrResume();
-                    // : SnakeGame.of(context).pauseOrResume();
+                screenBloc.typeGameSelected == TypeGame.tetris
+                    ? 
+                    TetrisGame.of(context).pauseOrResume()
+                    : screenBloc.pauseOrResume();
               }),
         ),
         Description(

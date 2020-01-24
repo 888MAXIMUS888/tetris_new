@@ -7,7 +7,7 @@ import 'material.dart';
 
 const _DIGITAL_ROW_SIZE = Size(14, 24);
 
-class Number extends StatelessWidget {
+class Number extends StatefulWidget {
   final int length;
 
   ///the number to show
@@ -22,16 +22,22 @@ class Number extends StatelessWidget {
       @required this.number,
       this.padWithZero = false})
       : super(key: key);
+  @override
+  State<StatefulWidget> createState() {
+    return NumberState();
+  }
+}
 
+class NumberState extends State<Number> {
   @override
   Widget build(BuildContext context) {
-    String digitalStr = number?.toString() ?? "";
-    if (digitalStr.length > length) {
-      digitalStr = digitalStr.substring(digitalStr.length - length);
+    String digitalStr = widget.number?.toString() ?? "";
+    if (digitalStr.length > widget.length) {
+      digitalStr = digitalStr.substring(digitalStr.length - widget.length);
     }
-    digitalStr = digitalStr.padLeft(length, padWithZero ? "0" : " ");
+    digitalStr = digitalStr.padLeft(widget.length, widget.padWithZero ? "0" : " ");
     List<Widget> children = [];
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < widget.length; i++) {
       children.add(Digital(int.tryParse(digitalStr[i])));
     }
     return Row(

@@ -2,7 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:new_tetris/audios.dart';
+import 'package:new_tetris/bloc/bloc_provider.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
+import 'package:new_tetris/bloc/settings_bloc.dart';
 import 'package:new_tetris/main.dart';
 
 const _COLOR_NORMAL = Colors.black87;
@@ -63,14 +66,14 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
 
   int brickPoint;
   Timer timer;
-  List<int> snakePosition = [];
+
   Offset offset;
   int x;
   int y;
   var widthPosition;
-  var widthPosition2;
   var heightPosition;
   List<int> _data = [];
+  SoundState get _sound => Sound.of(context);
 
   final GlobalKey _globalKey = GlobalKey();
 
@@ -80,24 +83,17 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
     // generateBrick();
     widget.screenBloc.snakeGameStates.listen((states) {
       print("states states states states states ===> $states");
-      if (states == GameState.START) {
-        startingSnake();
+      if (states == GameStates.runningSnake) {
+        widget.screenBloc.startingSnake();
         generateBrick();
         return getLatestSnake();
-      } else if (states == GameState.FAILURE) {
+      } else if (states == GameStates.failure) {
         timer.cancel();
-      } else {
-        return Stack(
-          children: <Widget>[
-            Positioned(
-                left: 400,
-                top: 400,
-                child: Center(
-                    child: Container(
-                  child: Text("Snake", style: TextStyle(fontSize: 40),),
-                ))),
-          ],
-        );
+        widget.screenBloc.restartStatusPanel();
+      } else if (states == GameStates.paused) {
+        timer.cancel();
+      } else if (states == GameStates.resume) {
+        getLatestSnake();
       }
     });
 
@@ -119,6 +115,7 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    // final SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
     final width = BrikSize2.of(context).size.width;
     return Stack(
       alignment: AlignmentDirectional.center,
@@ -149,9 +146,11 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
                         child: rowSelected(x, y, width, xy, index, _globalKey),
                         onTapDown: (details) {
                           var widthPosition =
-                              (snakePosition[0] / GAME_PAD_MATRIX_W);
+                              (widget.screenBloc.snakePosition[0] /
+                                  GAME_PAD_MATRIX_W);
                           var heightPosition =
-                              (snakePosition[0] % GAME_PAD_MATRIX_H);
+                              (widget.screenBloc.snakePosition[0] %
+                                  GAME_PAD_MATRIX_H);
                           print("widthPosition ======> $widthPosition");
                           print("heightPosition ======> $heightPosition");
                         },
@@ -159,25 +158,37 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
                     },
                   )
                 ]))),
-                StreamBuilder(
-                  stream: widget.screenBloc.outTypeGame,
-                  builder: (context, snapshot){
-                    if(snapshot.data != null){
-                      return Center(child: Text(snapshot.data.toString(), style: TextStyle(fontSize: 20),));
-                    } else {
-                      return Container();
-                    }
-                    
-                  },
-                )
-                
+        StreamBuilder(
+          stream: widget.screenBloc.outTypeGame,
+          builder: (context, snapshot) {
+            if (snapshot.data != null) {
+              return Center(
+                  child: Text(
+                snapshot.data.toString(),
+                style: TextStyle(fontSize: 20),
+              ));
+            } else {
+              return Container();
+            }
+          },
+        ),
+        StreamBuilder(
+          stream: widget.screenBloc.outNumberLevel,
+          builder: (context, snapshot) {
+            if (snapshot.data != null) {
+              return Center(child: Text("Level ${snapshot.data}", style: TextStyle(fontSize: 20),));
+            } else {
+              return Container();
+            }
+          },
+        )
       ],
     );
   }
 
   rowSelected(int x, int y, double width, List<int> xy, int index, globalKey) {
     Color color;
-    if (snakePosition.contains(index) ||
+    if (widget.screenBloc.snakePosition.contains(index) ||
         brickPoint == index ||
         _data.contains(index)) {
       color = brickColors[1];
@@ -204,29 +215,29 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
         ),
       ],
     );
-    // }
-  }
-
-  void startingSnake() {
-    snakePosition = [33, 43, 53, 63, 73, 83, 93, 103, 113, 123];
   }
 
   getLatestSnake() {
-    timer = Timer.periodic(Duration(milliseconds: 400), (t) {
+    timer = Timer.periodic(SPEED[widget.screenBloc.level], (t) {
       if (widget.screenBloc.isStoped == true) {
         t.cancel();
         widget.screenBloc.isStoped = false;
         getLatestSnake();
       }
       setState(() {
-        widthPosition = (snakePosition[0] % GAME_PAD_MATRIX_W).floor();
-        widthPosition2 = (snakePosition[1] % GAME_PAD_MATRIX_W).floor();
-        heightPosition = (snakePosition[0] % GAME_PAD_MATRIX_H).floor();
+        widthPosition =
+            (widget.screenBloc.snakePosition[0] % GAME_PAD_MATRIX_W).floor();
+        heightPosition =
+            (widget.screenBloc.snakePosition[0] % GAME_PAD_MATRIX_H).floor();
+        widget.screenBloc.states = GameStates.runningSnake;
+        print(
+            "widget.screenBloc.states  ====>>>>> ${widget.screenBloc.states}");
         switch (widget.screenBloc.direction) {
           case Direction.LEFT:
-            var currentHeadPos = snakePosition;
-            snakePosition.insert(0, currentHeadPos[0] - 1);
-            snakePosition.removeLast();
+            var currentHeadPos = widget.screenBloc.snakePosition;
+            widget.screenBloc.snakePosition.insert(0, currentHeadPos[0] - 1);
+            widget.screenBloc.snakePosition.removeLast();
+            _sound.move();
             failureSnake();
 
             print("widthPosition ====>>>>> $widthPosition");
@@ -234,9 +245,10 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
             break;
 
           case Direction.RIGHT:
-            var currentHeadPos = snakePosition;
-            snakePosition.insert(0, currentHeadPos[0] + 1);
-            snakePosition.removeLast();
+            var currentHeadPos = widget.screenBloc.snakePosition;
+            widget.screenBloc.snakePosition.insert(0, currentHeadPos[0] + 1);
+            widget.screenBloc.snakePosition.removeLast();
+            _sound.move();
 
             failureSnake();
             print("widthPosition ====>>>>> $widthPosition");
@@ -244,9 +256,10 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
             break;
 
           case Direction.UP:
-            var currentHeadPos = snakePosition;
-            snakePosition.insert(0, currentHeadPos[0] - 10);
-            snakePosition.removeLast();
+            var currentHeadPos = widget.screenBloc.snakePosition;
+            widget.screenBloc.snakePosition.insert(0, currentHeadPos[0] - 10);
+            widget.screenBloc.snakePosition.removeLast();
+            _sound.move();
 
             failureSnake();
             print("widthPosition ====>>>>> $widthPosition");
@@ -254,9 +267,10 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
             break;
 
           case Direction.DOWN:
-            var currentHeadPos = snakePosition;
-            snakePosition.insert(0, currentHeadPos[0] + 10);
-            snakePosition.removeLast();
+            var currentHeadPos = widget.screenBloc.snakePosition;
+            widget.screenBloc.snakePosition.insert(0, currentHeadPos[0] + 10);
+            widget.screenBloc.snakePosition.removeLast();
+            _sound.move();
 
             failureSnake();
             print("widthPosition ====>>>>> $widthPosition");
@@ -268,15 +282,19 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
   }
 
   failureSnake() {
-    if (snakePosition[0] < 0 ||
-        snakePosition[0] > 199 ||
+    if (widget.screenBloc.snakePosition[0] < 0 ||
+        widget.screenBloc.snakePosition[0] > 199 ||
         widthPosition == 0 && heightPosition == 10 ||
         heightPosition == 0 && widthPosition == 0) {
-      snakePosition.removeRange(0, 2);
-      widget.screenBloc.snakeGameStates.add(GameState.FAILURE);
+      widget.screenBloc.snakePosition.removeRange(0, 2);
+      widget.screenBloc.snakeGameStates.add(GameStates.failure);
+      _sound.start();
       restart();
-    } else if (snakePosition[0] == brickPoint) {
-      snakePosition.add(brickPoint);
+    } else if (widget.screenBloc.snakePosition[0] == brickPoint) {
+      widget.screenBloc.snakePosition.add(brickPoint);
+      _sound.clear();
+      widget.screenBloc.gameProgress();
+
       generateBrick();
       print("brickPoint ========> $brickPoint");
     }
@@ -320,7 +338,7 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
 
       setState(() {});
       await Future.delayed(_REST_LINE_DURATION);
-      snakePosition.clear();
+      widget.screenBloc.snakePosition.clear();
       brickPoint = null;
       widget.screenBloc.snakeGame();
       return _data.contains(199);

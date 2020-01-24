@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/briks.dart';
+import 'package:new_tetris/games/snake/snake_game.dart';
 // import 'package:new_tetris/games/snake.dart';
 import 'package:new_tetris/games/tetris.dart';
 import 'package:new_tetris/images.dart';
@@ -22,10 +23,14 @@ class StatusPanel extends StatelessWidget {
         children: <Widget>[
           Text("points", style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(height: 4),
-          // screenBloc.typeGameSelected == TypeGame.tetris
-          //     ? 
-              Number(number: TetrisGameState.of(context).points),
-              // : Number(number: SnakeGameState.of(context).points),
+          screenBloc.typeGameSelected == TypeGame.tetris
+              ? Number(number: TetrisGameState.of(context).points)
+              : StreamBuilder(
+                  stream: screenBloc.outGamePoints,
+                  builder: (context, snapshot) {
+                    return Number(number: snapshot.data);
+                  },
+                ),
           SizedBox(height: 10),
           screenBloc.typeGameSelected == TypeGame.tetris
               ? Column(
@@ -40,10 +45,14 @@ class StatusPanel extends StatelessWidget {
               : Container(),
           Text("level", style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(height: 4),
-          // screenBloc.typeGameSelected == TypeGame.tetris
-          //     ? 
-              Number(number: TetrisGameState.of(context).level),
-              // : Number(number: SnakeGameState.of(context).level),
+          screenBloc.typeGameSelected == TypeGame.tetris
+              ? Number(number: TetrisGameState.of(context).level)
+              : StreamBuilder(
+                  stream: screenBloc.outGameLevel,
+                  builder: (context, snapshot) {
+                    return Number(number: screenBloc.level);
+                  },
+                ),
           SizedBox(height: 10),
           screenBloc.typeGameSelected == TypeGame.tetris
               ? Column(
@@ -54,8 +63,24 @@ class StatusPanel extends StatelessWidget {
                   ],
                 )
               : Container(),
+          SizedBox(height: 4),
+          screenBloc.typeGameSelected == TypeGame.tetris
+              ? Container()
+              : Column(
+                  children: <Widget>[
+                    Text("length",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    StreamBuilder(
+                      stream: screenBloc.outSnakeLength,
+                      builder: (context, snapshot) {
+                        return Number(number: snapshot.data);
+                      },
+                    ),
+                  ],
+                ),
+          SizedBox(height: 10),
           Spacer(),
-          _GameStatus(
+          GameStatus(
             screenBloc: screenBloc,
           ),
         ],
@@ -86,18 +111,18 @@ class _NextBlock extends StatelessWidget {
   }
 }
 
-class _GameStatus extends StatefulWidget {
+class GameStatus extends StatefulWidget {
   final ScreenBloc screenBloc;
 
-  _GameStatus({@required this.screenBloc});
+  GameStatus({@required this.screenBloc});
 
   @override
-  _GameStatusState createState() {
-    return new _GameStatusState();
+  GameStatusState createState() {
+    return new GameStatusState();
   }
 }
 
-class _GameStatusState extends State<_GameStatus> {
+class GameStatusState extends State<GameStatus> {
   Timer _timer;
 
   bool _colonEnable = true;
@@ -130,16 +155,14 @@ class _GameStatusState extends State<_GameStatus> {
     return Row(
       children: <Widget>[
         // widget.screenBloc.typeGameSelected == TypeGame.tetris
-        //     ? 
-            IconSound(enable: TetrisGameState.of(context).muted),
-            // : IconSound(enable: SnakeGameState.of(context).muted),
+        //     ?
+        // IconSound(enable: TetrisGameState.of(context).muted),
+        // : IconSound(enable: SnakeGameState.of(context).muted),
         SizedBox(width: 4),
-        // widget.screenBloc.typeGameSelected == TypeGame.tetris
-        //     ? 
-            IconPause(
-                enable: TetrisGameState.of(context).states == GameStates.paused),
-            // : IconPause(
-            //     enable: SnakeGameState.of(context).states == GameStates.paused),
+        widget.screenBloc.typeGameSelected == TypeGame.tetris
+            ? IconPause(
+                enable: TetrisGameState.of(context).states == GameStates.paused)
+            : IconPause(enable: widget.screenBloc.states == GameStates.paused),
         Spacer(),
         Number(number: _hour, length: 2, padWithZero: true),
         IconColon(enable: _colonEnable),

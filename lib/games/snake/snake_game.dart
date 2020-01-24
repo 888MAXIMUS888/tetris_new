@@ -3,6 +3,8 @@ import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/game_controller/game_controller.dart';
 import 'package:new_tetris/games/snake/player_panel.dart';
 import 'package:new_tetris/material.dart';
+import 'package:new_tetris/settings/settings.dart';
+import 'package:new_tetris/status_panel.dart';
 
 const Color SCREEN_BACKGROUND = Color(0xff9ead86);
 final screenBorderWidth = 3.0;
@@ -16,10 +18,13 @@ class Snake extends StatefulWidget {
   State<StatefulWidget> createState() {
     return SnakeState();
   }
+
+  static SnakeState of(BuildContext context) {
+    return (context.inheritFromWidgetOfExactType(SnakeState) as SnakeState);
+  }
 }
 
 class SnakeState extends State<Snake> {
-  
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -63,70 +68,36 @@ class SnakeState extends State<Snake> {
                             child: BrikSize2(
                                 size:
                                     getBrikSizeForScreenWidth(playerPanelWidth),
-                                child: 
-                                Row(children: <Widget>[
+                                child: Row(children: <Widget>[
                                   PlayerPanel(
-                                      playerPanelWidth: playerPanelWidth, screenBloc: widget.screenBloc,),
+                                    playerPanelWidth: playerPanelWidth,
+                                    screenBloc: widget.screenBloc,
+                                  ),
                                   SizedBox(
                                     width: screenW - playerPanelWidth,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text("points",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          SizedBox(height: 4),
-                                          // screenBloc.typeGameSelected == TypeGame.tetris
-                                          //     ? Number(number: TetrisGameState.of(context).points)
-                                          //     : Number(number: SnakeGameState.of(context).points),
-                                          SizedBox(height: 10),
-                                          // screenBloc.typeGameSelected == TypeGame.tetris
-                                          //     ?
-                                          Column(
-                                            children: <Widget>[
-                                              Text("cleans",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              SizedBox(height: 4),
-                                              // Number(number: TetrisGameState.of(context).cleared),
-                                              SizedBox(height: 10),
-                                            ],
-                                          ),
-                                          // : Container(),
-                                          Text("level",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          SizedBox(height: 4),
-                                          // screenBloc.typeGameSelected == TypeGame.tetris
-                                          //     ? Number(number: TetrisGameState.of(context).level)
-                                          //     : Number(number: SnakeGameState.of(context).level),
-                                          SizedBox(height: 10),
-                                          // screenBloc.typeGameSelected == TypeGame.tetris
-                                          // ?
-                                          Column(
-                                            children: <Widget>[
-                                              Text("next",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              SizedBox(height: 4),
-                                              // _NextBlock()
-                                            ],
-                                          ),
-                                          // : Container(),
-                                          Spacer(),
-                                          // _GameStatus(
-                                          //   screenBloc: screenBloc,
-                                          // ),
-                                        ],
-                                      ),
+                                    child: StatusPanel(
+                                      screenBloc: widget.screenBloc,
                                     ),
                                   )
                                 ])))),
+                    StreamBuilder(
+                      stream: widget.screenBloc.outSettingsScreen,
+                      builder: (context, snapshot) {
+                        if (snapshot.data != null) {
+                          return Container(
+                            width: screenW,
+                            height: (playerPanelWidth - 6) * 2 + 6,
+                            child: Settings(),
+                          );
+                        } else {
+                          return Container(
+                            width: screenW,
+                            height: (playerPanelWidth - 6) * 2 + 6,
+                          );
+                        }
+                      },
+                    ),
+                    
                   ],
                 ),
               ),

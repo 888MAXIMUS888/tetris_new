@@ -86,19 +86,19 @@ class _KeyboardControllerState extends State<KeyboardController> {
       });
     } else if (key == PhysicalKeyboardKey.arrowLeft) {
       // gameSelect.left();
-      widget.screenBloc.left();
+      // widget.screenBloc.left(settingsBloc);
        setState(() {
         
       });
     } else if (key == PhysicalKeyboardKey.arrowRight) {
       // gameSelect.right();
-      widget.screenBloc.right();
+      // widget.screenBloc.right(settingsBloc);
        setState(() {
         
       });
     } else if (key == PhysicalKeyboardKey.space) {
       // gameSelect.drop();
-      widget.screenBloc.drop();
+      // widget.screenBloc.drop();
     } else if (key == PhysicalKeyboardKey.keyP) {
       // gameSelect.pauseOrResume();
     } else if (key == PhysicalKeyboardKey.keyS) {

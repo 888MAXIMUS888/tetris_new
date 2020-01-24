@@ -28,7 +28,7 @@ class DropButton extends StatelessWidget {
               } else if (screenBloc.typeGameSelected == TypeGame.tetris) {
                 TetrisGame.of(context).drop();
               } else if (screenBloc.typeGameSelected == TypeGame.snake) {
-                screenBloc.drop();
+                screenBloc.drop(settingsBloc, context);
               }
             }));
   }
