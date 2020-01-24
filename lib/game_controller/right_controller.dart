@@ -98,7 +98,7 @@ class RightController extends StatelessWidget {
                       onTap: () {
                         screenBloc.typeGameSelected == TypeGame.tetris
                             ? TetrisGame.of(context).rotate()
-                            : screenBloc.up();
+                            : screenBloc.upButton();
                       }),
                   SizedBox(width: directionSpace),
                   Button(
@@ -126,7 +126,7 @@ class RightController extends StatelessWidget {
                           TetrisGame.of(context).right();
                         } else if (screenBloc.typeGameSelected ==
                             TypeGame.snake) {
-                          screenBloc.right(settingsBloc);
+                          screenBloc.rightButton(settingsBloc);
                         }
                       })
                 ],
@@ -160,7 +160,7 @@ class RightController extends StatelessWidget {
                           TetrisGame.of(context).left();
                         } else if (screenBloc.typeGameSelected ==
                             TypeGame.snake) {
-                          screenBloc.left(settingsBloc);
+                          screenBloc.leftButton(settingsBloc);
                         }
                       }),
                   SizedBox(width: directionSpace),
@@ -170,7 +170,7 @@ class RightController extends StatelessWidget {
                     onTap: () {
                       screenBloc.typeGameSelected == TypeGame.tetris
                           ? TetrisGame.of(context).down()
-                          : screenBloc.down();
+                          : screenBloc.downButton();
                     },
                   ),
                 ],
@@ -193,7 +193,7 @@ class RightController extends StatelessWidget {
                   screenBloc.typeGameSelected == TypeGame.tetris
                       ?
                   TetrisGame.of(context).settings(screenBloc)
-                  : screenBloc.settings();
+                  : screenBloc.settingsButton();
                   print("openSettingsScreen  =>> $openSettingsScreen");
                 }),
           ),

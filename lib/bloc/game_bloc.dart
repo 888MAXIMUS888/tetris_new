@@ -50,8 +50,10 @@ class ScreenBloc {
   List<int> snakePosition = [];
 
   Direction direction = Direction.UP;
+  bool mute = false;
   // var gameState = GameState.NONE;
   bool isStoped = false;
+  
 
   final settingsScreen = BehaviorSubject();
   final openSettings = BehaviorSubject<bool>();
@@ -92,12 +94,12 @@ class ScreenBloc {
     typeGame.add("tetris");
   }
 
-  void up() {
+  void upButton() {
     direction = Direction.UP;
     isStoped = true;
   }
 
-  void right(settingsBloc) {
+  void rightButton(settingsBloc) {
     if (settinngsStates == SettingsStates.closedSettings) {
       direction = Direction.RIGHT;
       isStoped = true;
@@ -106,7 +108,7 @@ class ScreenBloc {
     }
   }
 
-  void left(settingsBloc) {
+  void leftButton(settingsBloc) {
     if (settinngsStates == SettingsStates.closedSettings) {
       direction = Direction.LEFT;
       isStoped = true;
@@ -115,7 +117,7 @@ class ScreenBloc {
     }
   }
 
-  void down() {
+  void downButton() {
     direction = Direction.DOWN;
     isStoped = true;
   }
@@ -132,7 +134,7 @@ class ScreenBloc {
     snakeGameStates.add(GameStates.resume);
   }
 
-  void pauseOrResume() {
+  void pauseOrResumeButton() {
     if (states == GameStates.runningSnake) {
       pause();
     } else if (states == GameStates.paused) {
@@ -140,8 +142,8 @@ class ScreenBloc {
     }
   }
 
-  settings() {
-    pauseOrResume();
+  settingsButton() {
+    pauseOrResumeButton();
     openSettingsScreen = !openSettingsScreen;
     if (settinngsStates == SettingsStates.closedSettings) {
       settinngsStates = SettingsStates.openSettings;
@@ -182,6 +184,15 @@ class ScreenBloc {
     level = 1;
     gamePoints.add(points);
     gameLevel.add(level);
+  }
+
+  resetButton(){
+    snakeGameStates.add(GameStates.reset);
+  }
+
+  soundSwitch(){
+    mute = !mute;
+    print("mute ========================>>>>>>>>>>>>>>>>> $mute");
   }
 
   void dispose() {

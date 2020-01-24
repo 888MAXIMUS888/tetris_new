@@ -74,13 +74,13 @@ class _KeyboardControllerState extends State<KeyboardController> {
     print("widget.screenBloc.typeGameSelected ===>>> ${widget.screenBloc.typeGameSelected}");
       if (key == PhysicalKeyboardKey.arrowUp) {
       // widget.screenBloc.up();
-      widget.screenBloc.up();
+      widget.screenBloc.upButton();
       setState(() {
         
       });
     } else if (key == PhysicalKeyboardKey.arrowDown) {
       // gameSelect.down();
-      widget.screenBloc.down();
+      widget.screenBloc.downButton();
        setState(() {
         
       });
