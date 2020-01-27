@@ -6,7 +6,7 @@ import 'dart:math' as math;
 
 import 'package:new_tetris/game_controller/widgets/button.dart';
 import 'package:new_tetris/game_controller/widgets/description.dart';
-import 'package:new_tetris/games/tetris.dart';
+import '../games/tetris/tetris.dart';
 
 class RightController extends StatelessWidget {
   final Size directionButtonSize;

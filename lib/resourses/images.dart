@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-import 'material.dart';
+import '../material.dart';
 
 const _DIGITAL_ROW_SIZE = Size(14, 24);
 

@@ -4,7 +4,8 @@ import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/bloc/settings_bloc.dart';
 import 'package:new_tetris/game_controller/widgets/button.dart';
 import 'package:new_tetris/game_controller/widgets/description.dart';
-import 'package:new_tetris/games/tetris.dart';
+
+import '../../games/tetris/tetris.dart';
 
 class DropButton extends StatelessWidget {
   final ScreenBloc screenBloc;
@@ -26,6 +27,7 @@ class DropButton extends StatelessWidget {
                 settingsBloc.setThemeIndex();
                 settingsBloc.initialThem(context);
               } else if (screenBloc.typeGameSelected == TypeGame.tetris) {
+                screenBloc.titleGame.add(null);
                 TetrisGame.of(context).drop();
               } else if (screenBloc.typeGameSelected == TypeGame.snake) {
                 screenBloc.drop(settingsBloc, context);

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/game_controller/widgets/button.dart';
 import 'package:new_tetris/game_controller/widgets/description.dart';
-// import 'package:new_tetris/games/snake.dart';
-import 'package:new_tetris/games/tetris.dart';
+import '../../games/tetris/tetris.dart';
 
 class SystemButtonGroup extends StatelessWidget {
   final Size systemButtonSize = const Size(24, 24);
@@ -24,8 +23,7 @@ class SystemButtonGroup extends StatelessWidget {
               enableLongPress: false,
               onTap: () {
                 screenBloc.typeGameSelected == TypeGame.tetris
-                    ? 
-                    TetrisGame.of(context).soundSwitch()
+                    ? TetrisGame.of(context).soundSwitch()
                     : screenBloc.soundSwitch();
               },
               onLongPress: null,
@@ -39,8 +37,7 @@ class SystemButtonGroup extends StatelessWidget {
               enableLongPress: false,
               onTap: () {
                 screenBloc.typeGameSelected == TypeGame.tetris
-                    ? 
-                    TetrisGame.of(context).pauseOrResume()
+                    ? TetrisGame.of(context).pauseOrResume()
                     : screenBloc.pauseOrResumeButton();
               },
               onLongPress: null,
@@ -54,8 +51,7 @@ class SystemButtonGroup extends StatelessWidget {
               color: Theme.of(context).focusColor,
               onTap: () {
                 screenBloc.typeGameSelected == TypeGame.tetris
-                    ? 
-                    TetrisGame.of(context).reset()
+                    ? TetrisGame.of(context).reset()
                     : screenBloc.resetButton();
               },
               onLongPress: null,

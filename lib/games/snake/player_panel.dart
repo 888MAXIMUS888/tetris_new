@@ -2,11 +2,12 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:new_tetris/audios.dart';
 import 'package:new_tetris/bloc/bloc_provider.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/bloc/settings_bloc.dart';
 import 'package:new_tetris/main.dart';
+
+import '../../resourses/audios.dart';
 
 const _COLOR_NORMAL = Colors.black87;
 
@@ -100,10 +101,6 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
         timer.cancel();
         getLatestSnake();
       }
-      // else if(states == GameStates.speedOff){
-      //   timer.cancel();
-      //   getLatestSnake();
-      // }
     });
 
     super.initState();
@@ -293,12 +290,23 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
   }
 
   failureSnake() {
-    if (widget.screenBloc.snakePosition[0] < 0 ||
+    if (
+      widget.screenBloc.snakePosition[0] < 0 ||
         widget.screenBloc.snakePosition[0] > 199 ||
         widthPosition == 0 && heightPosition == 19 ||
         widthPosition == 0 && heightPosition == 9 ||
         widthPosition == 9 && heightPosition == 10 ||
-        widthPosition == 19 && heightPosition == 0) {
+        widthPosition == 19 && heightPosition == 0 ||
+        widthPosition == 9 && heightPosition == 0
+        || widget.screenBloc.snakePosition.length > 4 && widget.screenBloc.snakePosition[0] == widget.screenBloc.snakePosition[3]
+        || widget.screenBloc.snakePosition.length > 5  && widget.screenBloc.snakePosition[0] == widget.screenBloc.snakePosition[4]
+        || widget.screenBloc.snakePosition.length > 6  && widget.screenBloc.snakePosition[0] == widget.screenBloc.snakePosition[5]
+        || widget.screenBloc.snakePosition.length > 7  && widget.screenBloc.snakePosition[0] == widget.screenBloc.snakePosition[6]
+        || widget.screenBloc.snakePosition.length > 8  && widget.screenBloc.snakePosition[0] == widget.screenBloc.snakePosition[7]
+        || widget.screenBloc.snakePosition.length > 9  && widget.screenBloc.snakePosition[0] == widget.screenBloc.snakePosition[8]
+        || widget.screenBloc.snakePosition.length > 10  && widget.screenBloc.snakePosition[0] == widget.screenBloc.snakePosition[9]
+ 
+        ) {
       widget.screenBloc.snakePosition.removeRange(0, 2);
       widget.screenBloc.snakeGameStates.add(GameStates.failure);
       widget.screenBloc.states = GameStates.selectedSnake;

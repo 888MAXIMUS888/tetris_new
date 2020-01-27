@@ -4,7 +4,8 @@ import 'package:new_tetris/game_controller/game_controller.dart';
 import 'package:new_tetris/games/snake/player_panel.dart';
 import 'package:new_tetris/material.dart';
 import 'package:new_tetris/settings/settings.dart';
-import 'package:new_tetris/status_panel.dart';
+
+import '../../status_panel/status_panel.dart';
 
 const Color SCREEN_BACKGROUND = Color(0xff9ead86);
 final screenBorderWidth = 3.0;
