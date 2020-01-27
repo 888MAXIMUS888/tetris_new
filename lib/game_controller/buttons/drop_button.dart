@@ -30,6 +30,13 @@ class DropButton extends StatelessWidget {
               } else if (screenBloc.typeGameSelected == TypeGame.snake) {
                 screenBloc.drop(settingsBloc, context);
               }
-            }));
+            },
+            onLongPress: (){
+              screenBloc.speedUp();
+            },
+            onLongPressEnd: (){
+              screenBloc.speedOff();
+            },
+            ));
   }
 }

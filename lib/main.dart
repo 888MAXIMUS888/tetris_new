@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/bloc_provider.dart';
 import 'package:new_tetris/bloc/settings_bloc.dart';
+import 'package:new_tetris/splash_screen.dart';
 import 'package:new_tetris/tetris.dart';
 import 'package:new_tetris/themes/custom_themes.dart';
 
@@ -16,6 +17,13 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
             navigatorObservers: [routeObserver],
             theme: CustomTheme.of(context),
-            home: Scaffold(body: Tetris())));
+            // home: Scaffold(body: SplashScreen()),
+            initialRoute: "/",
+            routes: routes,));
   }
 }
+
+final routes = {
+  '/tetris': (BuildContext context) => Scaffold(body: Tetris()),
+  '/': (BuildContext context) => SplashScreen(),
+};

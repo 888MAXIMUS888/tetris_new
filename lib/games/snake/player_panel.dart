@@ -96,7 +96,14 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
         timer.cancel();
         restart();
         widget.screenBloc.restartStatusPanel();
+      } else if (states == GameStates.speed) {
+        timer.cancel();
+        getLatestSnake();
       }
+      // else if(states == GameStates.speedOff){
+      //   timer.cancel();
+      //   getLatestSnake();
+      // }
     });
 
     super.initState();
@@ -222,7 +229,7 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
   }
 
   getLatestSnake() {
-    timer = Timer.periodic(SPEED[widget.screenBloc.level], (t) {
+    timer = Timer.periodic(SPEED[widget.screenBloc.snakeSpeed], (t) {
       if (widget.screenBloc.isStoped == true) {
         t.cancel();
         widget.screenBloc.isStoped = false;
@@ -294,7 +301,7 @@ class PlayerPanelState extends State<PlayerPanel> with RouteAware {
         widthPosition == 19 && heightPosition == 0) {
       widget.screenBloc.snakePosition.removeRange(0, 2);
       widget.screenBloc.snakeGameStates.add(GameStates.failure);
-
+      widget.screenBloc.states = GameStates.selectedSnake;
       restart();
     } else if (widget.screenBloc.snakePosition[0] == brickPoint) {
       widget.screenBloc.snakePosition.add(brickPoint);

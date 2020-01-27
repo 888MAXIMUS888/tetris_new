@@ -27,7 +27,9 @@ class SystemButtonGroup extends StatelessWidget {
                     ? 
                     TetrisGame.of(context).soundSwitch()
                     : screenBloc.soundSwitch();
-              }),
+              },
+              onLongPress: null,
+              onLongPressEnd: null),
         ),
         Description(
           text: "pause/resume",
@@ -40,7 +42,9 @@ class SystemButtonGroup extends StatelessWidget {
                     ? 
                     TetrisGame.of(context).pauseOrResume()
                     : screenBloc.pauseOrResumeButton();
-              }),
+              },
+              onLongPress: null,
+              onLongPressEnd: null),
         ),
         Description(
           text: "reset",
@@ -53,7 +57,9 @@ class SystemButtonGroup extends StatelessWidget {
                     ? 
                     TetrisGame.of(context).reset()
                     : screenBloc.resetButton();
-              }),
+              },
+              onLongPress: null,
+              onLongPressEnd: null),
         )
       ],
     );

@@ -7,6 +7,8 @@ class Button extends StatefulWidget {
   final Widget icon;
 
   final VoidCallback onTap;
+  final VoidCallback onLongPress;
+  final VoidCallback onLongPressEnd;
 
   ///the color of button
   final Color color;
@@ -17,6 +19,8 @@ class Button extends StatefulWidget {
       {Key key,
       @required this.size,
       @required this.onTap,
+      @required this.onLongPress,
+      @required this.onLongPressEnd,
       this.icon,
       this.color = Colors.blue,
       this.enableLongPress = true})
@@ -94,6 +98,12 @@ class Button extends StatefulWidget {
           setState(() {
             _color = widget.color;
           });
+        },
+        onLongPress: (){
+          widget.onLongPress();
+        },
+        onLongPressEnd: (e){
+          widget.onLongPressEnd();
         },
         child: SizedBox.fromSize(
           size: widget.size,

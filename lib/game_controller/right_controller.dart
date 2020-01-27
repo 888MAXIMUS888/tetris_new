@@ -99,7 +99,9 @@ class RightController extends StatelessWidget {
                         screenBloc.typeGameSelected == TypeGame.tetris
                             ? TetrisGame.of(context).rotate()
                             : screenBloc.upButton();
-                      }),
+                      },
+                      onLongPress: null,
+                      onLongPressEnd: null),
                   SizedBox(width: directionSpace),
                   Button(
                       color: Theme.of(context).buttonColor,
@@ -128,7 +130,9 @@ class RightController extends StatelessWidget {
                             TypeGame.snake) {
                           screenBloc.rightButton(settingsBloc);
                         }
-                      })
+                      },
+                      onLongPress: null,
+                      onLongPressEnd: null)
                 ],
               ),
               SizedBox(height: directionSpace),
@@ -162,17 +166,20 @@ class RightController extends StatelessWidget {
                             TypeGame.snake) {
                           screenBloc.leftButton(settingsBloc);
                         }
-                      }),
+                      },
+                      onLongPress: null,
+                      onLongPressEnd: null),
                   SizedBox(width: directionSpace),
                   Button(
-                    color: Theme.of(context).buttonColor,
-                    size: directionButtonSize,
-                    onTap: () {
-                      screenBloc.typeGameSelected == TypeGame.tetris
-                          ? TetrisGame.of(context).down()
-                          : screenBloc.downButton();
-                    },
-                  ),
+                      color: Theme.of(context).buttonColor,
+                      size: directionButtonSize,
+                      onTap: () {
+                        screenBloc.typeGameSelected == TypeGame.tetris
+                            ? TetrisGame.of(context).down()
+                            : screenBloc.downButton();
+                      },
+                      onLongPress: null,
+                      onLongPressEnd: null),
                 ],
               ),
               SizedBox(height: directionSpace),
@@ -191,11 +198,12 @@ class RightController extends StatelessWidget {
                 onTap: () {
                   openSettingsScreen = !openSettingsScreen;
                   screenBloc.typeGameSelected == TypeGame.tetris
-                      ?
-                  TetrisGame.of(context).settings(screenBloc)
-                  : screenBloc.settingsButton();
+                      ? TetrisGame.of(context).settings(screenBloc)
+                      : screenBloc.settingsButton();
                   print("openSettingsScreen  =>> $openSettingsScreen");
-                }),
+                },
+                onLongPress: null,
+                onLongPressEnd: null),
           ),
         )
       ],

@@ -19,7 +19,10 @@ enum GameStates {
   clear,
   drop,
   failure,
-  resume
+  resume,
+  // speedUp,
+  // speedOff
+  speed
 }
 
 const LEVEL_MAX = 9;
@@ -41,9 +44,10 @@ const SPEED = [
 class ScreenBloc {
   TypeGame typeGameSelected = TypeGame.tetris;
   GameStates states = GameStates.selectedTetris;
-  SettingsStates settinngsStates = SettingsStates.closedSettings;
+  SettingsStates settingsStates = SettingsStates.closedSettings;
 
   int level = 1;
+  int snakeSpeed = 1;
 
   int points = 0;
 
@@ -51,9 +55,7 @@ class ScreenBloc {
 
   Direction direction = Direction.UP;
   bool mute = false;
-  // var gameState = GameState.NONE;
   bool isStoped = false;
-  
 
   final settingsScreen = BehaviorSubject();
   final openSettings = BehaviorSubject<bool>();
@@ -76,14 +78,29 @@ class ScreenBloc {
   Observable get outNumberLevel => numberLevel.stream;
 
   void drop(settingsBloc, context) async {
-    if (settinngsStates == SettingsStates.openSettings) {
+    if (settingsStates == SettingsStates.openSettings) {
       settingsBloc.setThemeIndex();
       settingsBloc.initialThem(context);
-    } else {
+    } else if(states == GameStates.runningSnake){
+      // snakeGameStates.add(GameStates.speedUp);
+      
+      print("Heeeeeellllllloooooo");
+    }
+    else {
       snakeGameStates.add(GameStates.runningSnake);
       states = GameStates.selectedTetris;
       typeGame.add(null);
     }
+  }
+
+  void speedUp(){
+    snakeSpeed = 8;
+    snakeGameStates.add(GameStates.speed);
+  }
+
+  void speedOff(){
+    snakeSpeed = level;
+    snakeGameStates.add(GameStates.speed);
   }
 
   snakeGame() {
@@ -100,20 +117,41 @@ class ScreenBloc {
   }
 
   void rightButton(settingsBloc) {
-    if (settinngsStates == SettingsStates.closedSettings) {
+    print("settinngsStates  $settingsStates");
+    if (states == GameStates.runningSnake) {
       direction = Direction.RIGHT;
       isStoped = true;
+    } else if (settingsStates == SettingsStates.openSettings) {
+      settingsBloc.changeRightThem();
+    } else if (typeGameSelected == TypeGame.tetris ||
+        states == GameStates.selectedTetris) {
+      typeGame.add("snake");
+      typeGameSelected = TypeGame.snake;
+      states = GameStates.selectedSnake;
+    } else if (typeGameSelected == TypeGame.snake ||
+        states == GameStates.selectedSnake) {
+      typeGame.add("tetris");
+      typeGameSelected = TypeGame.tetris;
+      states = GameStates.selectedTetris;
     } else {
       settingsBloc.changeRightThem();
     }
   }
 
   void leftButton(settingsBloc) {
-    if (settinngsStates == SettingsStates.closedSettings) {
+    if (states == GameStates.runningSnake) {
       direction = Direction.LEFT;
       isStoped = true;
-    } else {
+    } else if (settingsStates == SettingsStates.openSettings) {
       settingsBloc.changeLeftThem();
+    } else if (typeGameSelected == TypeGame.tetris ||
+        states == GameStates.selectedTetris) {
+      typeGame.add("snake");
+    } else if (typeGameSelected == TypeGame.snake ||
+        states == GameStates.selectedSnake) {
+      typeGame.add("tetris");
+      typeGameSelected = TypeGame.tetris;
+      states = GameStates.selectedTetris;
     }
   }
 
@@ -145,11 +183,14 @@ class ScreenBloc {
   settingsButton() {
     pauseOrResumeButton();
     openSettingsScreen = !openSettingsScreen;
-    if (settinngsStates == SettingsStates.closedSettings) {
-      settinngsStates = SettingsStates.openSettings;
+    if (settingsStates == SettingsStates.closedSettings) {
+      settingsStates = SettingsStates.openSettings;
       settingsScreen.add(Settings());
+      // typeGame.add(null);
+      states = GameStates.selectedSnake;
+      
     } else {
-      settinngsStates = SettingsStates.closedSettings;
+      settingsStates = SettingsStates.closedSettings;
       settingsScreen.add(null);
     }
   }
@@ -158,24 +199,21 @@ class ScreenBloc {
     snakePosition = [63, 73, 83];
   }
 
-  gameProgress() async{
+  gameProgress() async {
     points += 100;
     snakeLength.add(snakePosition.length);
     gamePoints.add(points);
     if (snakePosition.length == 4) {
       level += 1;
-      gameLevel.add(level);
+      snakeSpeed = level;
+      gameLevel.add(snakeSpeed);
       startingSnake();
       snakeLength.add(snakePosition.length);
-     
-      // states = GameStates.paused;
-      numberLevel.add(level);
+      numberLevel.add(snakeSpeed);
       snakeGameStates.add(GameStates.paused);
       await Future.delayed(Duration(milliseconds: 2000));
-      // states = GameStates.runningSnake;
       numberLevel.add(null);
       snakeGameStates.add(GameStates.runningSnake);
-      // states.
     }
   }
 
@@ -186,13 +224,13 @@ class ScreenBloc {
     gameLevel.add(level);
   }
 
-  resetButton(){
+  resetButton() {
     snakeGameStates.add(GameStates.reset);
+    states = GameStates.selectedSnake;
   }
 
-  soundSwitch(){
+  soundSwitch() {
     mute = !mute;
-    print("mute ========================>>>>>>>>>>>>>>>>> $mute");
   }
 
   void dispose() {
