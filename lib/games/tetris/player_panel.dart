@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/briks.dart';
 // import 'package:new_tetris/games/snake.dart';
-import 'package:new_tetris/games/tetris.dart';
+import 'tetris.dart';
 
 enum TypeGame { tetris, snake }
 
@@ -69,17 +69,7 @@ class _PlayerPad extends StatelessWidget {
             }).toList(),
           );
         } else {
-          return Column(
-            // children: SnakeGameState.of(context).data.map((list) {
-            //   return Row(
-            //     children: list.map((b) {
-            //       return b == 1
-            //           ? const Brik.normal()
-            //           : b == 2 ? const Brik.highlight() : const Brik.empty();
-            //     }).toList(),
-            //   );
-            // }).toList(),
-          );
+          return Column();
         }
       },
     );
@@ -93,27 +83,31 @@ class _GameUninitialized extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(screenBloc.states == GameStates.selectedTetris || screenBloc.states == GameStates.selectedSnake){
+    if (screenBloc.states == GameStates.selectedTetris ||
+        screenBloc.states == GameStates.selectedSnake) {
       return StreamBuilder(
-      stream: screenBloc.outTypeGame,
-      builder: (context, snapshot) {
-        return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(height: 16),
-              Text(
-                snapshot.data.toString(),
-                style: TextStyle(fontSize: 20),
+        stream: screenBloc.outTitleGame,
+        builder: (context, snapshot) {
+          if (snapshot.data != null) {
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SizedBox(height: 16),
+                  Text(
+                    snapshot.data.toString(),
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
               ),
-            ],
-          ),
-        );
-      },
-    );
+            );
+          } else {
+            return Container();
+          }
+        },
+      );
     } else {
       return Container();
     }
-    
   }
 }

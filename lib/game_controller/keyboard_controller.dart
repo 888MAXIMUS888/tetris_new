@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 // import 'package:new_tetris/games/snake.dart';
-import 'package:new_tetris/games/tetris.dart';
+
+import '../games/tetris/tetris.dart';
 
 class KeyboardController extends StatefulWidget {
   final Widget child;

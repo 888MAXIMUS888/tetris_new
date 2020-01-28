@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:new_tetris/audios.dart';
 import 'package:new_tetris/bloc/ads_bloc.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/bloc/settings_bloc.dart';
 import 'package:new_tetris/game_controller/game_controller.dart';
 import 'package:new_tetris/game_controller/keyboard_controller.dart';
 import 'package:new_tetris/games/snake/snake_game.dart';
-import 'package:new_tetris/games/tetris.dart';
-import 'package:new_tetris/screen_decoration.dart';
+
+import 'games/tetris/tetris.dart';
+import 'resourses/audios.dart';
+import 'resourses/screen_decoration.dart';
 
 class Tetris extends StatefulWidget {
   @override

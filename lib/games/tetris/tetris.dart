@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:new_tetris/audios.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
 import 'package:new_tetris/main.dart';
 import 'package:new_tetris/resourses/bloc.dart';
 import 'package:new_tetris/settings/settings.dart';
+
+import '../../resourses/audios.dart';
 
 ///the height of game pad
 const GAME_PAD_MATRIX_H = 20;
@@ -101,8 +102,6 @@ class GameControl extends State<TetrisGame> with RouteAware {
   Block _current;
 
   Block _next = Block.getRandom();
-
-  
 
   Block _getNext() {
     final next = _next;
@@ -289,16 +288,19 @@ class GameControl extends State<TetrisGame> with RouteAware {
       _current = _current ?? _getNext();
       _autoFallTimer = Timer.periodic(_SPEED[_level - 1], (t) {
         down(enableSounds: false);
+        
       });
     }
+    
   }
 
   void pause() {
     if (widget.screenBloc.states == GameStates.runningTetris) {
       widget.screenBloc.states = GameStates.paused;
-    } else {
-      widget.screenBloc.states = GameStates.paused;
-    }
+    } 
+    // else {
+    //   widget.screenBloc.states = GameStates.paused;
+    // }
     // setState(() {});
   }
 
@@ -312,6 +314,7 @@ class GameControl extends State<TetrisGame> with RouteAware {
   }
 
   void reset() {
+    
     if (widget.screenBloc.states == GameStates.selectedTetris) {
       //可以开始游戏
       _startGame();
@@ -394,8 +397,8 @@ class GameControl extends State<TetrisGame> with RouteAware {
       }
     }
     debugPrint("game states : ${widget.screenBloc.states}");
-    return TetrisGameState(
-        mixed, widget.screenBloc.states, _level, _sound.mute, _points, _cleared, _next,
+    return TetrisGameState(mixed, widget.screenBloc.states, _level, _sound.mute,
+        _points, _cleared, _next,
         child: widget.child);
   }
 
@@ -407,8 +410,8 @@ class GameControl extends State<TetrisGame> with RouteAware {
 }
 
 class TetrisGameState extends InheritedWidget {
-  TetrisGameState(
-      this.data, this.states, this.level, this.muted, this.points, this.cleared, this.next,
+  TetrisGameState(this.data, this.states, this.level, this.muted, this.points,
+      this.cleared, this.next,
       {Key key, this.child})
       : super(key: key, child: child);
 

@@ -52,6 +52,7 @@ class ScreenBloc {
   int points = 0;
 
   List<int> snakePosition = [];
+  List<int> snakeData = [];
 
   Direction direction = Direction.UP;
   bool mute = false;
@@ -60,6 +61,7 @@ class ScreenBloc {
   final settingsScreen = BehaviorSubject();
   final openSettings = BehaviorSubject<bool>();
   final typeGame = BehaviorSubject.seeded("tetris");
+  final titleGame = BehaviorSubject.seeded("tetris");
   final gameStates = BehaviorSubject();
   final snakeGameStates = BehaviorSubject.seeded(GameStates.none);
   final gamePoints = BehaviorSubject.seeded(0);
@@ -70,6 +72,7 @@ class ScreenBloc {
   Observable get outSettingsScreen => settingsScreen.stream;
   Observable<bool> get outOpenSettings => openSettings.stream;
   Observable get outTypeGame => typeGame.stream;
+  Observable get outTitleGame => titleGame.stream;
   Observable get outGameState => gameStates.stream;
   Observable get outSnakeGameState => snakeGameStates.stream;
   Observable get outGamePoints => gamePoints.stream;
@@ -85,6 +88,8 @@ class ScreenBloc {
       // snakeGameStates.add(GameStates.speedUp);
       
       print("Heeeeeellllllloooooo");
+    } else if(states == GameStates.paused){
+      resumeGame();
     }
     else {
       snakeGameStates.add(GameStates.runningSnake);
@@ -142,7 +147,7 @@ class ScreenBloc {
     if (states == GameStates.runningSnake) {
       direction = Direction.LEFT;
       isStoped = true;
-    } else if (settingsStates == SettingsStates.openSettings) {
+    } else if (settingsStates == SettingsStates.openSettings && typeGameSelected == TypeGame.snake) {
       settingsBloc.changeLeftThem();
     } else if (typeGameSelected == TypeGame.tetris ||
         states == GameStates.selectedTetris) {
@@ -192,18 +197,19 @@ class ScreenBloc {
     } else {
       settingsStates = SettingsStates.closedSettings;
       settingsScreen.add(null);
+      resumeGame();
     }
   }
 
   void startingSnake() {
-    snakePosition = [63, 73, 83];
+    snakePosition = [53, 63, 73];
   }
 
   gameProgress() async {
     points += 100;
     snakeLength.add(snakePosition.length);
     gamePoints.add(points);
-    if (snakePosition.length == 4) {
+    if (snakePosition.length == 10) {
       level += 1;
       snakeSpeed = level;
       gameLevel.add(snakeSpeed);
@@ -243,5 +249,6 @@ class ScreenBloc {
     gameLevel.close();
     snakeLength.close();
     numberLevel.close();
+    titleGame.close();
   }
 }

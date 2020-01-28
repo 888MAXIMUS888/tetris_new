@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_tetris/bloc/game_bloc.dart';
-import 'package:new_tetris/display.dart';
+
+import '../display.dart';
 
 const Color SCREEN_BACKGROUND = Color(0xff9ead86);
 
