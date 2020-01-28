@@ -288,16 +288,19 @@ class GameControl extends State<TetrisGame> with RouteAware {
       _current = _current ?? _getNext();
       _autoFallTimer = Timer.periodic(_SPEED[_level - 1], (t) {
         down(enableSounds: false);
+        
       });
     }
+    
   }
 
   void pause() {
     if (widget.screenBloc.states == GameStates.runningTetris) {
       widget.screenBloc.states = GameStates.paused;
-    } else {
-      widget.screenBloc.states = GameStates.paused;
-    }
+    } 
+    // else {
+    //   widget.screenBloc.states = GameStates.paused;
+    // }
     // setState(() {});
   }
 
@@ -350,7 +353,6 @@ class GameControl extends State<TetrisGame> with RouteAware {
         widget.screenBloc.states = GameStates.selectedTetris;
       });
     }();
-    widget.screenBloc.titleGame.add("tetris");
   }
 
   void _startGame() {

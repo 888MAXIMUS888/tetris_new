@@ -88,6 +88,8 @@ class ScreenBloc {
       // snakeGameStates.add(GameStates.speedUp);
       
       print("Heeeeeellllllloooooo");
+    } else if(states == GameStates.paused){
+      resumeGame();
     }
     else {
       snakeGameStates.add(GameStates.runningSnake);
@@ -145,7 +147,7 @@ class ScreenBloc {
     if (states == GameStates.runningSnake) {
       direction = Direction.LEFT;
       isStoped = true;
-    } else if (settingsStates == SettingsStates.openSettings) {
+    } else if (settingsStates == SettingsStates.openSettings && typeGameSelected == TypeGame.snake) {
       settingsBloc.changeLeftThem();
     } else if (typeGameSelected == TypeGame.tetris ||
         states == GameStates.selectedTetris) {
@@ -195,6 +197,7 @@ class ScreenBloc {
     } else {
       settingsStates = SettingsStates.closedSettings;
       settingsScreen.add(null);
+      resumeGame();
     }
   }
 

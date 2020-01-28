@@ -118,7 +118,7 @@ class RightController extends StatelessWidget {
                           print("_typeGame ${screenBloc.typeGameSelected}");
                         } else if (screenBloc.typeGameSelected ==
                                 TypeGame.snake &&
-                            screenBloc.states == GameStates.selectedSnake) {
+                            screenBloc.states == GameStates.selectedSnake && screenBloc.settingsStates == SettingsStates.closedSettings) {
                           screenBloc.typeGame.add("tetris");
                           screenBloc.typeGameSelected = TypeGame.tetris;
                           screenBloc.states = GameStates.selectedTetris;
@@ -154,7 +154,8 @@ class RightController extends StatelessWidget {
                           print("_typeGame ${screenBloc.typeGameSelected}");
                         } else if (screenBloc.typeGameSelected ==
                                 TypeGame.snake &&
-                            screenBloc.states == GameStates.selectedSnake) {
+                                screenBloc.states == GameStates.selectedSnake &&
+                            screenBloc.settingsStates == SettingsStates.closedSettings) {
                           screenBloc.typeGame.add("tetris");
                           screenBloc.typeGameSelected = TypeGame.tetris;
                           screenBloc.states = GameStates.selectedTetris;
